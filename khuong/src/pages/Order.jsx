@@ -4,7 +4,7 @@ import MenuNavbar from "../components/MenuNavbar";
 import { Fragment, useEffect, useState } from 'react'
 import { authenticatedApiInstance } from "../utils/ApiInstance";
 import { GET_CATEGORY_URL, GET_PRODUCTS_BY_CATEGORY } from "../utils/constants";
-import { ToastError } from "../utils/Toastify";
+import { ToastError, ToastSuccess } from "../utils/Toastify";
 
 
 function Order() {
@@ -15,6 +15,12 @@ function Order() {
     const [dentistName, setDentistName] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
     const [patientName, setPatientName] = useState('')
+    const [openCardOrder, setOpenCardOrder] = useState(false)
+    const [selectedProduct, setSelectedProduct] = useState({});
+    const [selectedTeethPosition, setSelectedTeethPosition] = useState(0);
+    const [shoppingCart, setShoppingCart] = useState([]);
+    const [note, setNote] = useState('');
+    const [gender, setGender] = useState('')
 
     useEffect(() => {
         fetchCategories().then(items => setCategoryListName(items))
@@ -39,6 +45,61 @@ function Order() {
             setProductListName(response.data['items']);
         } catch (err) {
             await ToastError(err.response?.data['Error']);
+        }
+    }
+
+    const handleOpenCardOrder = () => {
+        setOpenCardOrder(true);
+    }
+
+    const selectPricebyProduct = (e) => {
+        productListName.forEach((product) => {
+            if (product.id.toString() === e.target.value) {
+                setSelectedProduct(product);
+            }
+        })
+    }
+
+    const formatToVnd = (price) => {
+        price += ''
+        return price.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    const handleAddToCart = () => {
+        let orderItem = {
+            productId: selectedProduct.id,
+            productName: selectedProduct.name,
+            teethPositionId: selectedTeethPosition,
+            totalAmount: selectedProduct.costPrice,
+            note: note,
+        }
+
+        setShoppingCart((shoppingCart) => [
+            orderItem,
+            ...shoppingCart
+        ])
+        ToastSuccess('Thêm đơn hàng thành công')
+    }
+
+    const isValidPhoneNumber = ({ phoneNumber }) => {
+        const regexPhoneNumber = /(0[2|3|5|7|8|9])+([0-9]{8})\b/g;
+        return phoneNumber.match(regexPhoneNumber) ? true : false;
+    }
+
+    const isValidToAddToCart = () => {
+        if (selectedProduct == {}) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    const handlePhoneNumberChange = (e) => {
+        e.preventDefault();
+        let assumPhoneNumber = e.target.value;
+
+        if (isValidPhoneNumber({ phoneNumber: assumPhoneNumber })) {
+            setPhoneNumber(assumPhoneNumber);
         }
     }
 
@@ -68,7 +129,7 @@ function Order() {
                                             <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2 " htmlfor="grid-password">
                                                 Bác sỹ
                                             </label>
-                                            <input type="text" placeholder="Nhập vào" className="input input-bordered input-info w-full max-w-xs " />
+                                            <input type="text" placeholder="Nhập vào" className="input input-bordered input-info w-full max-w-xs " onChange={(e) => setDentistName(e.target.value)} />
                                         </div>
                                     </div>
                                     <div class="w-full lg:w-6/12 pl-24">
@@ -76,7 +137,7 @@ function Order() {
                                             <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlfor="grid-password">
                                                 Số điện thoại
                                             </label>
-                                            <input type="text" placeholder="Nhập vào" className="input input-bordered input-info w-full max-w-xs " />
+                                            <input type="text" placeholder="Nhập vào" className="input input-bordered input-info w-full max-w-xs " onChange={handlePhoneNumberChange} />
                                         </div>
                                     </div>
                                     <div class="w-full lg:w-6/12 px-4">
@@ -84,17 +145,17 @@ function Order() {
                                             <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlfor="grid-password">
                                                 Tên bệnh nhân
                                             </label>
-                                            <input type="text" placeholder="Nhập vào" className="input input-bordered input-info w-full max-w-xs  " />                                        </div>
+                                            <input type="text" placeholder="Nhập vào" className="input input-bordered input-info w-full max-w-xs" onChange={(e) => setPatientName(e.target.value)} />                                        </div>
                                     </div>
                                     <div class="w-full lg:w-6/12 pl-24">
                                         <div class=" w-full mb-3">
                                             <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlfor="grid-password">
                                                 Giới tính
                                             </label>
-                                            <select className="select select-info w-full max-w-xs">
+                                            <select className="select select-info w-full max-w-xs" onChange={(e) => setGender(e.target.value)}>
                                                 <option disabled selected>Chọn giới tính</option>
-                                                <option>Nam</option>
-                                                <option>Nữ</option>
+                                                <option value="Male">Nam</option>
+                                                <option value="Female">Nữ</option>
                                             </select>
                                         </div>
                                     </div>
@@ -125,10 +186,22 @@ function Order() {
                                                 <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlfor="grid-password">
                                                     Sản phẩm
                                                 </label>
-                                                <select className="select select-info w-full max-w-xs">
+                                                <select className="select select-info w-full max-w-xs" onChange={selectPricebyProduct}>
                                                     <option disabled selected>Chọn sản phẩm</option>
-                                                    {productListName.map((cart) => <option value={cart.productId}>{cart.name}</option>)}
+                                                    {productListName.map((cart) => <option value={cart.id}>{cart.name} </option>)}
                                                 </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="w-full lg:w-6/12 px-4">
+                                        </div>
+
+                                        <div class="w-full lg:w-6/12 pl-24">
+                                            <div class=" w-full mb-3">
+                                                <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlfor="grid-password">
+                                                    Giá tiền
+                                                </label>
+                                                <input className="input input-bordered input-info w-full max-w-xs " value={formatToVnd(selectedProduct.costPrice)} disabled />
                                             </div>
                                         </div>
 
@@ -136,164 +209,164 @@ function Order() {
                                             <div class="grid grid-rows-2 grid-flow-col gap-4 text-center">
                                                 <div>
                                                     <img src="./imgMenu/r1.png" className="max-w-2rem" />
-                                                    <p class="text-base">01</p>
-                                                    <input type="radio" id="1" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">1-8</p>
+                                                    <input type="radio" id="8" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
 
                                                 <div>
                                                     <img src="./imgMenu/r32.png" className="max-w-2rem" />
-                                                    <p class="text-base">32</p>
+                                                    <p class="text-base">4-8</p>
                                                     <input type="radio" id='32' name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r2.png" className="max-w-2rem" />
-                                                    <p class="text-base">02</p>
-                                                    <input type="radio" id="2" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">1-7</p>
+                                                    <input type="radio" id="7" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r31.png" className="max-w-2rem" />
-                                                    <p class="text-base">31</p>
+                                                    <p class="text-base">4-7</p>
                                                     <input type="radio" id="31" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r3.png" className="max-w-2rem" />
-                                                    <p class="text-base">03</p>
-                                                    <input type="radio" id="3" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">1-6</p>
+                                                    <input type="radio" id="6" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r30.png" className="max-w-2rem" />
-                                                    <p class="text-base">30</p>
+                                                    <p class="text-base">4-6</p>
                                                     <input type="radio" id="30" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r4.png" className="max-w-2rem" />
-                                                    <p class="text-base">04</p>
-                                                    <input type="radio" id="4" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">1-5</p>
+                                                    <input type="radio" id="5" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r29.png" className="max-w-2rem" />
-                                                    <p class="text-base">29</p>
+                                                    <p class="text-base">4-5</p>
                                                     <input type="radio" id="29" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r5.png" className="max-w-2rem" />
-                                                    <p class="text-base">05</p>
-                                                    <input type="radio" id="5" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">1-4</p>
+                                                    <input type="radio" id="4" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r28.png" className="max-w-2rem" />
-                                                    <p class="text-base">28</p>
+                                                    <p class="text-base">4-4</p>
                                                     <input type="radio" id="28" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r6.png" className="max-w-2rem" />
-                                                    <p class="text-base">06</p>
-                                                    <input type="radio" id="6" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">1-3</p>
+                                                    <input type="radio" id="3" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r27.png" className="max-w-2rem" />
-                                                    <p class="text-base">27</p>
+                                                    <p class="text-base">4-3</p>
                                                     <input type="radio" id="27" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r7.png" className="max-w-2rem" />
-                                                    <p class="text-base">07</p>
-                                                    <input type="radio" id="7" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">1-2</p>
+                                                    <input type="radio" id="2" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r26.png" className="max-w-2rem" />
-                                                    <p class="text-base">26</p>
+                                                    <p class="text-base">4-2</p>
                                                     <input type="radio" id="26" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r8.png" className="max-w-2rem" />
-                                                    <p class="text-base">08</p>
-                                                    <input type="radio" id="8" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">1-1</p>
+                                                    <input type="radio" id="1" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r25.png" className="max-w-2rem" />
-                                                    <p class="text-base">25</p>
+                                                    <p class="text-base">4-1</p>
                                                     <input type="radio" id="25" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r9.png" className="max-w-2rem" />
-                                                    <p class="text-base">09</p>
+                                                    <p class="text-base">2-1</p>
                                                     <input type="radio" id="9" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r24.png" className="max-w-2rem" />
-                                                    <p class="text-base">24</p>
-                                                    <input type="radio" id="24" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">3-1</p>
+                                                    <input type="radio" id="17" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r10.png" className="max-w-2rem" />
-                                                    <p class="text-base">10</p>
+                                                    <p class="text-base">2-2</p>
                                                     <input type="radio" id="10" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r23.png" className="max-w-2rem" />
-                                                    <p class="text-base">23</p>
-                                                    <input type="radio" id="23" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">3-2</p>
+                                                    <input type="radio" id="18" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r11.png" className="max-w-2rem" />
-                                                    <p class="text-base">11</p>
+                                                    <p class="text-base">2-3</p>
                                                     <input type="radio" id="11" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r22.png" className="max-w-2rem" />
-                                                    <p class="text-base">22</p>
-                                                    <input type="radio" id="22" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">3-3</p>
+                                                    <input type="radio" id="19" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r12.png" className="max-w-2rem" />
-                                                    <p class="text-base">12</p>
+                                                    <p class="text-base">2-4</p>
                                                     <input type="radio" id="12" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r21.png" className="max-w-2rem" />
-                                                    <p class="text-base">21</p>
-                                                    <input type="radio" id="21" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">3-4</p>
+                                                    <input type="radio" id="20" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r13.png" className="max-w-2rem" />
-                                                    <p class="text-base">13</p>
+                                                    <p class="text-base">2-5</p>
                                                     <input type="radio" id="13" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r20.png" className="max-w-2rem" />
-                                                    <p class="text-base">20</p>
-                                                    <input type="radio" id="20" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">3-5</p>
+                                                    <input type="radio" id="21" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r14.png" className="max-w-2rem" />
-                                                    <p class="text-base">14</p>
+                                                    <p class="text-base">2-6</p>
                                                     <input type="radio" id="14" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r19.png" className="max-w-2rem" />
-                                                    <p class="text-base">19</p>
-                                                    <input type="radio" id="19" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">3-6</p>
+                                                    <input type="radio" id="22" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r15.png" className="max-w-2rem" />
-                                                    <p class="text-base">15</p>
+                                                    <p class="text-base">2-7</p>
                                                     <input type="radio" id="15" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r18.png" className="max-w-2rem" />
-                                                    <p class="text-base">18</p>
-                                                    <input type="radio" id="18" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">3-7</p>
+                                                    <input type="radio" id="23" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r16.png" className="max-w-2rem" />
-                                                    <p class="text-base">16</p>
+                                                    <p class="text-base">2-8</p>
                                                     <input type="radio" id="16" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
                                                 <div>
                                                     <img src="./imgMenu/r17.png" className="max-w-2rem" />
-                                                    <p class="text-base">17</p>
-                                                    <input type="radio" id="17" name="tooth-position" className="radio checkbox-xs checkbox-info" />
+                                                    <p class="text-base">3-8</p>
+                                                    <input type="radio" id="24" name="tooth-position" className="radio checkbox-xs checkbox-info" />
                                                 </div>
 
                                             </div>
@@ -312,7 +385,7 @@ function Order() {
                                             <div class="w-full lg:w-12/12 px-4">
                                                 <div class="w-full mb-3">
 
-                                                    <textarea type="text" className="textarea textarea-info focus:ring w-full" rows="4"></textarea>
+                                                    <textarea type="text" className="textarea textarea-info focus:ring w-full" rows="4" onChange={(e) => setNote(e.target.value)}></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -320,12 +393,15 @@ function Order() {
                                     </div>
                                 </div>
                             </form>
-                        </div>
 
+                        </div>
+                        <button className="btn btn-ghost" onClick={handleOpenCardOrder}>Xem thêm</button>
+                        <CartOrder initialValue={openCardOrder} onChange={() => setOpenCardOrder(false)} products={shoppingCart} />
+                        <button className="btn btn-ghost" onClick={handleAddToCart}>Thêm vào giỏ hàng</button>
                     </div>
                 </div>
             </div>
-            <CartOrder />
+
             <Footer />
         </>
     );

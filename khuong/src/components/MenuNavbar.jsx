@@ -16,7 +16,6 @@ const MenuNavbar = () => {
                         <span className="badge">New</span>
                     </a>
                 </li>
-                <li><a>Settings</a></li>
                 <li><a onClick={() => { localStorage.clear(); }} href="/">Đăng xuất</a></li>
             </ul>
         </div>
@@ -31,7 +30,7 @@ const MenuNavbar = () => {
     const renderOrderButton = (
         <>
             <div class="hidden flex-none items-center lg:block"><a data-sveltekit-preload-data="hover" href="/Order" class="btn btn-ghost drawer-button font-semibold normal-case">Đơn Hàng</a></div>
-            <div class="hidden flex-none items-center lg:block"><a data-sveltekit-preload-data="hover" href="/Order" class="btn btn-ghost drawer-button font-semibold normal-case">Xem đơn Hàng</a></div>
+            <div class="hidden flex-none items-center lg:block"><a data-sveltekit-preload-data="hover" href="/Order" class="btn btn-ghost drawer-button font-semibold normal-case">Xem Đơn </a></div>
         </>
     )
 
@@ -74,7 +73,7 @@ const MenuNavbar = () => {
                 </ul>
             </div> */}
             <div class="hidden flex-none items-center lg:block"><a data-sveltekit-preload-data="hover" href="/categories" class="btn btn-ghost drawer-button font-semibold normal-case">Sản Phẩm</a></div>
-            <div class="hidden flex-none items-center lg:block"><a data-sveltekit-preload-data="hover" href="/service" class="btn btn-ghost drawer-button font-semibold normal-case">Dịch vụ</a></div>
+            <div class="hidden flex-none items-center lg:block"><a data-sveltekit-preload-data="hover" href="/service" class="btn btn-ghost drawer-button font-semibold normal-case">Dịch Vụ</a></div>
             {localStorage.getItem('currentUser') && JSON.parse(localStorage.getItem('currentUser'))['role'] === 'Dental' ? renderOrderButton : null}
             <div className="navbar-end">
                 {!!localStorage.getItem('token') ? profileButton : renderLoginButton}
