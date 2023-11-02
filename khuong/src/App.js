@@ -10,6 +10,7 @@ import Category from './pages/Category';
 import Profile from './pages/Profile';
 import Order from './pages/Order';
 import Service from './pages/Service';
+import ViewOrder from './pages/ViewOrder';
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
                 <Route path='/order' element={<Order />}> </Route>
                 <Route path='/signup' element={<SignUp />}> </Route>
                 <Route path='/profile' element={<Profile />}> </Route>
+                <Route path='/viewOrder' element={<ViewOrder />}> </Route>
 
 
             </Routes>

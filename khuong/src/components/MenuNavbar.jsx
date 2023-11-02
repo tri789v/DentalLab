@@ -30,7 +30,7 @@ const MenuNavbar = () => {
     const renderOrderButton = (
         <>
             <div class="hidden flex-none items-center lg:block"><a data-sveltekit-preload-data="hover" href="/Order" class="btn btn-ghost drawer-button font-semibold normal-case">Đơn Hàng</a></div>
-            <div class="hidden flex-none items-center lg:block"><a data-sveltekit-preload-data="hover" href="/Order" class="btn btn-ghost drawer-button font-semibold normal-case">Xem Đơn </a></div>
+            <div class="hidden flex-none items-center lg:block"><a data-sveltekit-preload-data="hover" href="/ViewOrder" class="btn btn-ghost drawer-button font-semibold normal-case">Xem Đơn </a></div>
         </>
     )
 
