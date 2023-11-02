@@ -7,13 +7,14 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastError, Toastify, ToastInfo, ToastSuccess } from '../utils/Toastify';
 import { anonymousApiInstance } from '../utils/ApiInstance';
-import { LOGIN_URL } from '../utils/constants';
+import { LOGIN_URL, PROFILE_API_BY_ROLE } from '../utils/constants';
 import MenuNavbar from '../components/MenuNavbar';
 import Footer from '../components/Footer';
 
 const Login = (isGoodToGo) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [dentalId, setDentalId] = useState(0);
   const navigate = useNavigate()
 
 

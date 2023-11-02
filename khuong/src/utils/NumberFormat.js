@@ -1,4 +1,4 @@
-const formatToVnd = (price) => {
+export const formatToVnd = (price, currency = '') => {
   price += ''
-  return price.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return price.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ' + currency;
 }
