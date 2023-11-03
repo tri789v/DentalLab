@@ -5,7 +5,8 @@ export const GET_CATEGORY_URL = `${BASE_API_URL}/categories`;
 export const GET_PRODUCTS_BY_CATEGORY = `${BASE_API_URL}/products/category`;
 export const UPDATE_DENTAL_PROFILE = `${BASE_API_URL}/dentals`;
 export const CREATE_NEW_ORDER = `${BASE_API_URL}/orders`;
-export const GET_ORDERS = (id) => (`${BASE_API_URL}/dentals/${id}/orders`);
+export const GET_ORDERS = (id, paramsString = '') => (`${BASE_API_URL}/dentals/${id}/orders?${paramsString}`);
+export const GET_ORDER_BY_ID = (id) => `${BASE_API_URL}/orders/${id}`;
 
 const PROFILE_API = {
   admin: "",

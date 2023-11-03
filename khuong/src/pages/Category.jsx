@@ -6,6 +6,7 @@ import { GET_PRODUCTS_BY_CATEGORY } from "../utils/constants";
 import { ToastError } from "../utils/Toastify";
 import { Card, CardProduct } from "../components/Card";
 import { useParams } from "react-router-dom";
+import React from "react";
 
 const Category = (props) => {
     const [products, setProducts] = useState([]);

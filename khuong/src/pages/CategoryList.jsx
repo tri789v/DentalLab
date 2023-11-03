@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import React from "react";
 import MenuNavbar from "../components/MenuNavbar";
 import Footer from "../components/Footer";
 import { authenticatedApiInstance } from "../utils/ApiInstance";
