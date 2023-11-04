@@ -16,6 +16,9 @@ import OrderDetail from "./pages/Order/OrderDetail";
 import LocalStorageUtils from "./utils/LocalStorageUtils";
 import Dashboard from "./pages/Admin/Dashboard";
 import Stage from "./pages/Stage";
+import { CategoryManagement } from "./components/Admin/CategoryManagement";
+import { UsersManagement } from "./components/Admin/UsersManagement";
+import { ProductManagement } from "./components/Admin/ProductManagement";
 
 function App() {
     const EMPLOYEE_ROLE = ["admin", "staff", "reception"]
@@ -33,7 +36,11 @@ function App() {
             LocalStorageUtils.getCurrentUser() &&
             EMPLOYEE_ROLE.includes(LocalStorageUtils.getCurrentUser().role.toLowerCase())
         ) {
-            return <Route path="/dashboard" element={<Dashboard />}></Route>;
+            return (<>
+                <Route path="/dashboard" element={<Dashboard componentChild={<UsersManagement />} />}></Route>
+                <Route path="/dashboard/category" element={<Dashboard componentChild={<CategoryManagement />} />}></Route>
+                <Route path="/dashboard/product" element={<Dashboard componentChild={<ProductManagement />} />}></Route>
+            </>)
         } else {
             <Route path="/login" element={<NotFound />}></Route>;
         }

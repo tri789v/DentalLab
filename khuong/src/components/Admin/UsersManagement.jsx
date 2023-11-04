@@ -1,23 +1,23 @@
-import React, {useEffect, useState} from "react";
-import {TableGenerator} from "../../utils/TableGenerator";
+import React, { useEffect, useState } from "react";
+import { TableGenerator } from "../../utils/TableGenerator";
 import LocalStorageUtils from "../../utils/LocalStorageUtils";
-import {GET_ALL_ACCOUNT} from "../../utils/constants";
-import {authenticatedApiInstance} from "../../utils/ApiInstance";
-import {ToastConfirmDelete, ToastError} from "../../utils/Toastify";
+import { GET_ALL_ACCOUNT } from "../../utils/constants";
+import { authenticatedApiInstance } from "../../utils/ApiInstance";
+import { ToastConfirmDelete, ToastError } from "../../utils/Toastify";
 import Pagination from "../Pagination";
 import queryString from "query-string";
 
 export function UsersManagement() {
   const accessToken = LocalStorageUtils.getToken();
 
-  const HEADER_NAMES = ["id", "username", "status", "role", "action"];
+  const HEADER_NAMES = ["ID", "Tên đăng nhập", "Trạng thái", "Vai trò", "Thao tác"];
   const [pagination, setPagination] = useState({
     page: 1,
     total: 1,
-    size: 10,
+    size: 6,
   });
   const [filters, setFilters] = useState({
-    size: 10,
+    size: 6,
     page: 1,
   });
 
@@ -43,9 +43,9 @@ export function UsersManagement() {
       const response = await authenticatedApiInstance(accessToken).get(
         GET_ALL_ACCOUNT(paramsString),
       );
-      const {items, size, page, total} = response.data;
+      const { items, size, page, total } = response.data;
 
-      const _pagination = {size, page, total};
+      const _pagination = { size, page, total };
 
       return [items, _pagination];
     } catch (err) {
@@ -99,7 +99,7 @@ export function UsersManagement() {
             <h2 class="text-gray-500 text-lg font-semibold flex h-fit">
               Danh sách tài khoản
             </h2>
-            <button class="btn btn-outline">
+            <button class="btn btn-outline " onClick={() => document.getElementById('my_modal_account').showModal()}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -108,6 +108,60 @@ export function UsersManagement() {
                 <path d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z" />
               </svg>
             </button>
+            <dialog id="my_modal_account" className="modal ">
+              <div className="modal-box max-w-xl">
+                <form method="dialog" className="p-4">
+                  {/* if there is a button in form, it will close the modal */}
+                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                  <h2 className="font-bold text-xl mb-3">
+                    Tạo tài khoản
+                  </h2>
+                  <div class="bg-gradient-to-r from-cyan-300 to-cyan-500 h-px mb-3"></div>
+                  <div className="form-control w-full max-w-xl">
+                    <label className="label">
+                      <span className="label-text">Tài Khoản</span>
+                    </label>
+                    <input type="text" placeholder="Nhập tài khoản" className="input input-bordered" />
+
+                  </div>
+                  <div className="form-control w-full max-w-xl mt-1">
+                    <label className="label">
+                      <span className="label-text">Mật khẩu</span>
+                    </label>
+                    <input type="text" placeholder="Nhập mật khẩu" className="input input-bordered" />
+
+                  </div>
+                  <div className="form-control w-full max-w-xl mt-1">
+                    <label className="label">
+                      <span className="label-text">Tên</span>
+                    </label>
+                    <input type="text" placeholder="Xin tên" className="input input-bordered" />
+
+                  </div>
+                  <div className="form-control w-full max-w-xl mt-1">
+                    <label className="label">
+                      <span className="label-text">Vai trò</span>
+                    </label>
+                    <select className="select select-bordered max-w-xl">
+                      <option disabled selected>Chọn vai trò</option>
+                      <option>Dental</option>
+                      <option>Staff</option>
+                      <option>Reception</option>
+                      <option>Manager</option>
+                      <option>Shipper</option>
+                      <option>Admin</option>
+                    </select>
+
+                  </div>
+                  <div className="pl-2 mt-6 ml-72">
+                    <button class="btn btn-error text-white mr-2">Hủy</button>
+                    <button class="btn btn-success text-white">Lưu thay đổi</button>
+                  </div>
+
+
+                </form>
+              </div>
+            </dialog>
           </div>
 
           <div class="my-1"></div>

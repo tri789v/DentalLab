@@ -3,15 +3,15 @@ import MenuNavbar from "../../components/MenuNavbar";
 import { Sidebar } from "../../components/Admin/Sidebar";
 import { UsersManagement } from "../../components/Admin/UsersManagement";
 
-function Dashboard() {
+function Dashboard({componentChild}) {
   return (
     <>
       <MenuNavbar />
-      <div class="flex flex-col h-screen bg-gray-100">
+      <div class="flex flex-col bg-gray-100 mt-1">
         <div class="flex-1 flex">
           <Sidebar />
 
-          <UsersManagement />
+        {componentChild}
         </div>
       </div>
 
