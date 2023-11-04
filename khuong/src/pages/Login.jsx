@@ -1,15 +1,10 @@
-// import logo from './logo.svg';
-// import logodental from './images/312679b8fcd3288d71c2-removebg-preview-1.png';
-import { Link, useNavigate } from 'react-router-dom';
-// import './Login.css';
+import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'
-import { ToastError, Toastify, ToastInfo, ToastSuccess } from '../utils/Toastify';
+import { ToastError, ToastSuccess } from '../utils/Toastify';
 import { anonymousApiInstance } from '../utils/ApiInstance';
-import { LOGIN_URL, PROFILE_API_BY_ROLE } from '../utils/constants';
+import { LOGIN_URL } from '../utils/constants';
 import MenuNavbar from '../components/MenuNavbar';
-import Footer from '../components/Footer';
 
 const Login = (isGoodToGo) => {
   const [username, setUsername] = useState('')

@@ -1,4 +1,5 @@
 import Footer from "../components/Footer";
+import React from "react";
 import MenuNavbar from "../components/MenuNavbar";
 
 function Service() {
