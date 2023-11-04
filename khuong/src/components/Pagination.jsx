@@ -34,7 +34,7 @@ function Pagination(props) {
   };
 
   return (
-    <div className="join flex-auto">
+    <div className="join flex justify-center mt-6">
       <button
         className="join-item btn btn-outline"
         disabled={page <= 1}
