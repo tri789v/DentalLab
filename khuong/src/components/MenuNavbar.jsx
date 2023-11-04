@@ -37,7 +37,8 @@ const MenuNavbar = () => {
         <li>
           <a
             onClick={() => {
-              localStorage.clear();
+              LocalStorageUtils.removeItem('token')
+              LocalStorageUtils.removeItem('currentUser')
             }}
             href="/">
             Đăng xuất

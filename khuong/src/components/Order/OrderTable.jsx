@@ -24,7 +24,10 @@ export const OrderTable = ({orders}) => {
   ];
 
   const renderStatusBadge = (status) => (
-    <td className={`badge badge-${MAPPING_ORDER_STATUS_BADGE[status]}`}>
+    <td
+      className={`badge badge-${
+        MAPPING_ORDER_STATUS_BADGE[status] || "secondary"
+      }`}>
       {status}
     </td>
   );
@@ -34,7 +37,7 @@ export const OrderTable = ({orders}) => {
       <tbody>
         <tr className="hover">
           <th>
-            <a href={ `/orders/${order.id}` }>{order.id}</a>
+            <a href={`/orders/${order.id}`}>{order.id}</a>
           </th>
           <td>{order.dentistName}</td>
           <td>{order.patientName}</td>

@@ -74,7 +74,7 @@ function ViewOrder() {
                 <div class="text-black text-3xl font-bold">XEM ĐƠN HÀNG</div>
               </div>
             </div>
-            <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
+            <div class="flex-auto px-4 py-10 pt-0">
               <OrderTable orders={orderList} />
             </div>
             <Pagination

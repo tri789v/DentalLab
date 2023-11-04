@@ -1,6 +1,13 @@
 import React from "react";
 
-export default function ToothRadioInput({ setSelectedTeethPosition }) {
+export default function ToothRadioInput({setSelectedTeethPosition}) {
+  const handleSelectTeethRadioInput = (e) => {
+    if (e) {
+      e.target.disabled = true;
+      setSelectedTeethPosition(e.target.value);
+    }
+  };
+
   return (
     <div class="grid grid-rows-2 grid-flow-col gap-4 text-center">
       <div>
@@ -12,7 +19,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={8}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
 
@@ -25,7 +32,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={32}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -37,7 +44,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={7}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -49,7 +56,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={31}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -61,7 +68,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={6}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -73,7 +80,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={30}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -85,7 +92,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={5}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -97,7 +104,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={29}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -109,7 +116,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={4}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -121,7 +128,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={28}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -133,7 +140,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={3}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -145,7 +152,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={27}
-          onChange={(e) => setSelectedTeethPosition(27)}
+          onChange={(e) => handleSelectTeethRadioInput(27)}
         />
       </div>
       <div>
@@ -157,7 +164,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={2}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -169,7 +176,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={26}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -181,7 +188,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={1}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -193,7 +200,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={25}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -205,7 +212,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={9}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -217,7 +224,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={17}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -229,7 +236,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={10}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -241,7 +248,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={18}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -253,7 +260,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={11}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -265,7 +272,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={19}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -277,7 +284,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={12}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -289,7 +296,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={20}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -301,7 +308,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={13}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -313,7 +320,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={21}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -325,7 +332,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={14}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -337,7 +344,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={22}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -349,7 +356,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={15}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -361,7 +368,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={23}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -373,7 +380,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={16}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
       <div>
@@ -385,7 +392,7 @@ export default function ToothRadioInput({ setSelectedTeethPosition }) {
           name="tooth-position"
           className="radio checkbox-xs checkbox-info"
           value={24}
-          onChange={(e) => setSelectedTeethPosition(e.target.value)}
+          onChange={(e) => handleSelectTeethRadioInput(e)}
         />
       </div>
     </div>

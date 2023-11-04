@@ -1,12 +1,12 @@
-import {Fragment, useEffect, useState} from "react";
-import {Dialog, Transition} from "@headlessui/react";
-import {XMarkIcon} from "@heroicons/react/24/outline";
-import {formatToVnd} from "../../utils/NumberFormat";
 import LocalStorageUtils from "../../utils/LocalStorageUtils";
-import {ToastError, ToastSuccess} from "../../utils/Toastify";
-import {authenticatedApiInstance} from "../../utils/ApiInstance";
-import {CREATE_NEW_ORDER, PROFILE_API_BY_ROLE} from "../../utils/constants";
 import React from "react";
+import {CREATE_NEW_ORDER, PROFILE_API_BY_ROLE, SUCCESS_RESPONSE_STATUS} from "../../utils/constants";
+import {Dialog, Transition} from "@headlessui/react";
+import {Fragment, useEffect, useState} from "react";
+import {ToastError, ToastSuccess} from "../../utils/Toastify";
+import {XMarkIcon} from "@heroicons/react/24/outline";
+import {authenticatedApiInstance} from "../../utils/ApiInstance";
+import {formatToVnd} from "../../utils/NumberFormat";
 
 export default function CartOrder({
   initialValue,
@@ -14,8 +14,9 @@ export default function CartOrder({
   products,
   sharedInfo,
 }) {
-  const [isOpen, setIsOpen] = useState(initialValue);
+
   const [finalAmount, setFinalAmount] = useState(0);
+  const [isOpen, setIsOpen] = useState(initialValue);
   const accessToken = localStorage.getItem("token");
 
   useEffect(() => {
@@ -23,7 +24,6 @@ export default function CartOrder({
     products.forEach((product) => {
       finalTotal += Number(product.totalAmount);
     });
-
     setFinalAmount(finalTotal);
   });
 
@@ -72,7 +72,7 @@ export default function CartOrder({
         CREATE_NEW_ORDER,
         payload,
       );
-      if ([200, 201, 202].includes(response.status)) {
+      if (SUCCESS_RESPONSE_STATUS.includes(response.status)) {
         ToastSuccess("Đặt hàng thành công, cảm ơn quý khách");
       } else {
         ToastError("Hệ thống có trục trặc, vui lòng thử lại sau");

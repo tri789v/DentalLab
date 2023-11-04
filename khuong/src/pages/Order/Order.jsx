@@ -15,22 +15,34 @@ import ToothRadioInput from "../../components/Order/ToothRadioInput";
 
 function Order() {
   const [categoryListName, setCategoryListName] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [productListName, setProductListName] = useState([]);
   const [dentistName, setDentistName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [patientName, setPatientName] = useState("");
+  const [dentistNameError, setDentistNameError] = useState("");
+  const [gender, setGender] = useState("");
+  const [note, setNote] = useState("");
   const [openCardOrder, setOpenCardOrder] = useState(false);
+  const [patientName, setPatientName] = useState("");
+  const [patientNameError, setPatientNameError] = useState("");
+  const [patientPhoneError, setPatientPhoneError] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [productListName, setProductListName] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState({});
   const [selectedTeethPosition, setSelectedTeethPosition] = useState(0);
-  const [shoppingCart, setShoppingCart] = useState([]);
-  const [note, setNote] = useState("");
-  const [gender, setGender] = useState("");
   const [sharedInfo, setSharedInfo] = useState({});
+  const [shoppingCart, setShoppingCart] = useState([]);
+  const [toothPositionError, setToothPositionError] = useState("");
+
+  const currentId = LocalStorageUtils.getCurrentUser().id; 
 
   useEffect(() => {
     fetchCategories().then((items) => setCategoryListName(items));
   }, []);
+
+  useEffect(() => {
+    if (shoppingCart.length > 0) {
+      LocalStorageUtils.setItem(`shoppingCart:${currentId}`, shoppingCart);
+      setShoppingCart([]);
+    }
+  }, [shoppingCart])
 
   const fetchCategories = async () => {
     const accessToken = localStorage.getItem("token");
@@ -50,7 +62,7 @@ function Order() {
 
     try {
       const response = await authenticatedApiInstance(accessToken).get(
-        `${GET_PRODUCTS_BY_CATEGORY}?categoryId=${id}`,
+        `${GET_PRODUCTS_BY_CATEGORY(id)}`,
       );
       setProductListName(response.data["items"]);
     } catch (err) {
@@ -71,6 +83,34 @@ function Order() {
   };
 
   const handleAddToCart = () => {
+    let errors = {};
+
+    if (dentistName === "") {
+      errors.dentistName = "Vui lòng điền thông tin bác sĩ";
+    }
+
+    if (patientName === "") {
+      errors.patientName = "Vui lòng điền thông tin bệnh nhân";
+    }
+
+    if (isValidPhoneNumber(phoneNumber) === false) {
+      errors.phoneNumber = "Số điện thoại sai định dạng";
+    }
+
+    if (selectedTeethPosition === 0) {
+      errors.teethPosition = "Vui lòng chọn loại răng";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setPatientNameError(errors.patientName || "");
+      setDentistNameError(errors.dentistName || "");
+      setPatientPhoneError(errors.phoneNumber || "");
+      setToothPositionError(errors.teethPosition || "")
+      window.scrollTo({top: 0, behavior: "smooth"})
+      ToastError(toothPositionError || "Form không hợp lệ");
+      return;
+    }
+
     let orderItem = {
       productId: selectedProduct.id,
       productName: selectedProduct.name,
@@ -80,7 +120,7 @@ function Order() {
     };
 
     let sharedItem = {
-      dentalId: LocalStorageUtils.getItem("currentUser").id,
+      dentalId: currentId,
       dentistName: dentistName,
       patientName: patientName,
       patientGender: gender,
@@ -89,27 +129,17 @@ function Order() {
 
     if (Object.keys(selectedProduct).length !== 0) {
       setShoppingCart((shoppingCart) => [orderItem, ...shoppingCart]);
-      // LocalStorageUtils.removeItem('cart')
-      // LocalStorageUtils.setItem('cart', shoppingCart);
       setSharedInfo(sharedItem);
+      setSelectedTeethPosition(0)
       ToastSuccess("Thêm đơn hàng thành công");
     } else {
       ToastError("Đơn đang trống");
     }
   };
 
-  const isValidPhoneNumber = ({phoneNumber}) => {
+  const isValidPhoneNumber = (phoneNumber) => {
     const regexPhoneNumber = /(0[2|3|5|7|8|9])+([0-9]{8})\b/g;
     return phoneNumber.match(regexPhoneNumber) ? true : false;
-  };
-
-  const handlePhoneNumberChange = (e) => {
-    e.preventDefault();
-    let assumPhoneNumber = e.target.value;
-
-    if (isValidPhoneNumber({phoneNumber: assumPhoneNumber})) {
-      setPhoneNumber(assumPhoneNumber);
-    }
   };
 
   return (
@@ -132,7 +162,7 @@ function Order() {
                 </h6>
                 <div class="flex flex-wrap">
                   <div class="w-full lg:w-6/12 px-4">
-                    <div class=" w-full mb-3">
+                    <div className="form-control w-full max-w-xs">
                       <label
                         class="block uppercase text-blueGray-600 text-xs font-bold mb-2 "
                         htmlfor="grid-password">
@@ -140,10 +170,18 @@ function Order() {
                       </label>
                       <input
                         type="text"
-                        placeholder="Nhập vào"
-                        className="input input-bordered input-info w-full max-w-xs "
+                        placeholder="Nhập tên bác sỹ"
+                        autoFocus={true}
+                        className={`input input-bordered w-full max-w-xs input-${
+                          dentistNameError !== "" ? "error" : "info"
+                        } `}
                         onChange={(e) => setDentistName(e.target.value)}
                       />
+                      <label className="label">
+                        <span className="label-text-alt text-red-500">
+                          {dentistNameError}
+                        </span>
+                      </label>
                     </div>
                   </div>
                   <div class="w-full lg:w-6/12 pl-24">
@@ -155,25 +193,40 @@ function Order() {
                       </label>
                       <input
                         type="text"
-                        placeholder="Nhập vào"
-                        className="input input-bordered input-info w-full max-w-xs "
-                        onChange={handlePhoneNumberChange}
+                        placeholder="Nhập số điện thoại"
+                        className={`input input-bordered w-full max-w-xs input-${
+                          patientPhoneError !== "" ? "error" : "info"
+                        } `}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
                       />
+                      <label className="label">
+                        <span className="label-text-alt text-red-500">
+                          {patientPhoneError}
+                        </span>
+                      </label>
                     </div>
                   </div>
                   <div class="w-full lg:w-6/12 px-4">
                     <div class=" w-full mb-3">
                       <label
-                        class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                        class="block uppercase text-blueGray-600 text-xs font-bold mb-2 "
                         htmlfor="grid-password">
-                        Tên bệnh nhân
+                          Bệnh nhân
                       </label>
                       <input
                         type="text"
-                        placeholder="Nhập vào"
-                        className="input input-bordered input-info w-full max-w-xs"
+                        placeholder="Nhập tên bệnh nhân"
+                        autoFocus={true}
+                        className={`input input-bordered w-full max-w-xs input-${
+                          patientNameError !== "" ? "error" : "info"
+                        } `}
                         onChange={(e) => setPatientName(e.target.value)}
-                      />{" "}
+                      />
+                      <label className="label">
+                        <span className="label-text-alt text-red-500">
+                          {patientNameError}
+                        </span>
+                      </label>
                     </div>
                   </div>
                   <div class="w-full lg:w-6/12 pl-24">
@@ -252,7 +305,7 @@ function Order() {
                         </label>
                         <input
                           className="input input-bordered input-info w-full max-w-xs "
-                          value={formatToVnd(selectedProduct.costPrice)}
+                          value={formatToVnd(selectedProduct.costPrice || "0", "VND")}
                           disabled
                         />
                       </div>
@@ -292,7 +345,7 @@ function Order() {
             <CartOrder
               initialValue={openCardOrder}
               onChange={() => setOpenCardOrder(false)}
-              products={shoppingCart}
+              products={LocalStorageUtils.getItem(`shoppingCart:${currentId}`) || []}
               sharedInfo={sharedInfo}
             />
             <button className="btn btn-ghost" onClick={handleAddToCart}>
