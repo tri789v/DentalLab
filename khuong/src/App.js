@@ -33,7 +33,7 @@ function App() {
             LocalStorageUtils.getCurrentUser() &&
             EMPLOYEE_ROLE.includes(LocalStorageUtils.getCurrentUser().role.toLowerCase())
         ) {
-            return <Route path="/admin/dashboard" element={<Dashboard />}></Route>;
+            return <Route path="/dashboard" element={<Dashboard />}></Route>;
         } else {
             <Route path="/login" element={<NotFound />}></Route>;
         }

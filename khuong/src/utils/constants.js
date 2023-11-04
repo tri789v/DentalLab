@@ -8,7 +8,7 @@ export const CREATE_NEW_ORDER = `${BASE_API_URL}/orders`;
 export const GET_ORDERS = (id, paramsString = '') => (`${BASE_API_URL}/dentals/${id}/orders?${paramsString}`);
 export const GET_ORDER_BY_ID = (id) => `${BASE_API_URL}/orders/${id}`;
 export const SUCCESS_RESPONSE_STATUS = [200, 201, 202]
-export const GET_ALL_ACCOUNT = `${BASE_API_URL}/accounts`
+export const GET_ALL_ACCOUNT = (paramsString) => `${BASE_API_URL}/accounts?${paramsString}`
 
 const PROFILE_API = {
   admin: "",

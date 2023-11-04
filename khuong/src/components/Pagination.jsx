@@ -23,7 +23,7 @@ function Pagination(props) {
     for (let currentPage = 1; currentPage <= totalPages; currentPage++) {
       pageNumbers.push(
         <button
-          className="join-item btn btn-outline"
+          className={"join-item btn".concat(` ${page === currentPage ? "btn-neutral" : "btn-outline"}`)}
         >
           {currentPage}
         </button>

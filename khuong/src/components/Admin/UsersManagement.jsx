@@ -5,6 +5,8 @@ import { GET_ALL_ACCOUNT } from "../../utils/constants";
 import { authenticatedApiInstance } from "../../utils/ApiInstance";
 import { ToastError } from "../../utils/Toastify";
 import Pagination from "../Pagination";
+import queryString from "query-string";
+
 export function UsersManagement() {
   const accessToken = LocalStorageUtils.getToken();
 
@@ -26,7 +28,7 @@ export function UsersManagement() {
       setAccountList(items[0])
       setPagination(items[1]);
     });
-  }, []);
+  }, [filters]);
 
   const handlePageChange = (newPage) => {
     setFilters({
@@ -36,10 +38,10 @@ export function UsersManagement() {
   };
 
   const fetchAccount = async () => {
-
     try {
+      const paramsString = queryString.stringify(filters);
       const response = await authenticatedApiInstance(accessToken).get(
-        GET_ALL_ACCOUNT,
+        GET_ALL_ACCOUNT(paramsString),
       );
       const { items, size, page, total } = response.data;
 
@@ -77,90 +79,6 @@ export function UsersManagement() {
         </h2>
         <div class="my-1"></div>
         <div class="bg-gradient-to-r from-cyan-300 to-cyan-500 h-px mb-6"></div>
-        {/* <table class="w-full table-auto text-sm">
-          <thead>
-            <tr class="text-sm leading-normal">
-              <th class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                Foto
-              </th>
-              <th class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                Nombre
-              </th>
-              <th class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                Rol
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="hover:bg-grey-lighter">
-              <td class="py-2 px-4 border-b border-grey-light">
-                <img src="https://via.placeholder.com/40" alt="Foto Perfil" class="rounded-full h-10 w-10" />
-              </td>
-              <td class="py-2 px-4 border-b border-grey-light">
-                Juan Pérez
-              </td>
-              <td class="py-2 px-4 border-b border-grey-light">
-                Comercio
-              </td>
-            </tr>
-
-            <tr class="hover:bg-grey-lighter">
-              <td class="py-2 px-4 border-b border-grey-light">
-                <img src="https://via.placeholder.com/40" alt="Foto Perfil" class="rounded-full h-10 w-10" />
-              </td>
-              <td class="py-2 px-4 border-b border-grey-light">
-                María Gómez
-              </td>
-              <td class="py-2 px-4 border-b border-grey-light">
-                Usuario
-              </td>
-            </tr>
-            <tr class="hover:bg-grey-lighter">
-              <td class="py-2 px-4 border-b border-grey-light">
-                <img src="https://via.placeholder.com/40" alt="Foto Perfil" class="rounded-full h-10 w-10" />
-              </td>
-              <td class="py-2 px-4 border-b border-grey-light">
-                Carlos López
-              </td>
-              <td class="py-2 px-4 border-b border-grey-light">
-                Usuario
-              </td>
-            </tr>
-            <tr class="hover:bg-grey-lighter">
-              <td class="py-2 px-4 border-b border-grey-light">
-                <img src="https://via.placeholder.com/40" alt="Foto Perfil" class="rounded-full h-10 w-10" />
-              </td>
-              <td class="py-2 px-4 border-b border-grey-light">
-                Laura Torres
-              </td>
-              <td class="py-2 px-4 border-b border-grey-light">
-                Comercio
-              </td>
-            </tr>
-            <tr class="hover:bg-grey-lighter">
-              <td class="py-2 px-4 border-b border-grey-light">
-                <img src="https://via.placeholder.com/40" alt="Foto Perfil" class="rounded-full h-10 w-10" />
-              </td>
-              <td class="py-2 px-4 border-b border-grey-light">
-                Ana Ramírez
-              </td>
-              <td class="py-2 px-4 border-b border-grey-light">
-                Usuario
-              </td>
-            </tr>
-            <tr class="hover:bg-grey-lighter">
-              <td class="py-2 px-4 border-b border-grey-light">
-                <img src="https://via.placeholder.com/40" alt="Foto Perfil" class="rounded-full h-10 w-10" />
-              </td>
-              <td class="py-2 px-4 border-b border-grey-light">
-                Luis Martínez
-              </td>
-              <td class="py-2 px-4 border-b border-grey-light">
-                Comercio
-              </td>
-            </tr>
-          </tbody>
-        </table> */}
         <div>
           <div>
             <TableGenerator headerNames={HEADER_NAMES} renderRowHandler={renderUsers} items={accountList} />
