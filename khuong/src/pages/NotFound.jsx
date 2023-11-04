@@ -15,6 +15,5 @@ export const NotFound = () => (
         </a>
       </div>
     </div>
-    <Footer />
   </>
 );

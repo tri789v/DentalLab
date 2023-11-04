@@ -19,7 +19,7 @@ export function TableGenerator(props) {
   const { headerNames, renderRowHandler, items, block } = props;
 
   return (
-    <table className="table">
+    <table className="table relative">
       <thead>
         <tr>
           {headerNames.map((headerName) => (

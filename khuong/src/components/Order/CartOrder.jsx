@@ -1,11 +1,11 @@
-import {Fragment, useEffect, useState} from "react";
-import {Dialog, Transition} from "@headlessui/react";
-import {XMarkIcon} from "@heroicons/react/24/outline";
-import {formatToVnd} from "../../utils/NumberFormat";
+import { Fragment, useEffect, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { formatToVnd } from "../../utils/NumberFormat";
 import LocalStorageUtils from "../../utils/LocalStorageUtils";
-import {ToastError, ToastSuccess} from "../../utils/Toastify";
-import {authenticatedApiInstance} from "../../utils/ApiInstance";
-import {CREATE_NEW_ORDER, PROFILE_API_BY_ROLE} from "../../utils/constants";
+import { ToastError, ToastSuccess } from "../../utils/Toastify";
+import { authenticatedApiInstance } from "../../utils/ApiInstance";
+import { CREATE_NEW_ORDER, PROFILE_API_BY_ROLE } from "../../utils/constants";
 import React from "react";
 
 export default function CartOrder({
@@ -42,7 +42,7 @@ export default function CartOrder({
         note: product.note,
       }));
 
-      const {role, id} = LocalStorageUtils.getCurrentUser();
+      const { role, id } = LocalStorageUtils.getCurrentUser();
       const dentalProfileUrl = PROFILE_API_BY_ROLE(role.toLowerCase());
       const dentalProfileResponse = await authenticatedApiInstance(
         accessToken,
@@ -67,6 +67,13 @@ export default function CartOrder({
         finalAmount: afterDiscountAmount,
         note: "Em có gì đâu ngoài những vết thương sâu",
       };
+
+      if (productList.length <= 0) {
+        ToastError("Vui lòng thêm sản phẩm vào giỏ hàng")
+        return;
+      }
+
+      
 
       const response = await authenticatedApiInstance(accessToken).post(
         CREATE_NEW_ORDER,

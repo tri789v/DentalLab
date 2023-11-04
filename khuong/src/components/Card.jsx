@@ -1,4 +1,6 @@
 import React from "react"
+import { formatToVnd } from "../utils/NumberFormat";
+import LocalStorageUtils from "../utils/LocalStorageUtils";
 
 export const Card = (props) => (
     <a key={props.cardItem.id} href={`/categories/${props.cardItem.id}`} className="group">
@@ -15,9 +17,13 @@ export const Card = (props) => (
 
 export const CardProduct = (props) => {
 
-    const formatToVnd = (price) => {
-        price += ''
-        return price.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' VND';
+    const { role } = LocalStorageUtils.getCurrentUser() || "guest";
+
+    const renderPrice = () => {
+        if (role && role.toLowerCase() !== "guest") {
+            return (<p className="mt-1 text-lg font-medium text-gray-900">{formatToVnd(props.cardItem.costPrice, 'VND')}</p>
+            )
+        }
     }
 
     return (
@@ -32,8 +38,7 @@ export const CardProduct = (props) => {
                 </div>
 
                 <h3 className="mt-4 text-sm text-gray-700">{props.cardItem.name}</h3>
-                <p className="mt-1 text-lg font-medium text-gray-900">{formatToVnd(props.cardItem.costPrice)}</p>
-
+                {renderPrice()}
             </div>
 
         </>

@@ -1,9 +1,9 @@
-import {EmptyList, TableGenerator} from "../../utils/TableGenerator";
+import { EmptyList, TableGenerator } from "../../utils/TableGenerator";
 import React from "react";
-import {formatToVnd} from "../../utils/NumberFormat";
-import {formatDate} from "../../utils/StringFormat";
+import { formatToVnd } from "../../utils/NumberFormat";
+import { formatDate } from "../../utils/StringFormat";
 
-export const OrderTable = ({orders}) => {
+export const OrderTable = ({ orders }) => {
   const MAPPING_ORDER_STATUS_BADGE = {
     Producing: "primary",
     Pending: "secondary",
@@ -34,12 +34,12 @@ export const OrderTable = ({orders}) => {
       <tbody>
         <tr className="hover">
           <th>
-            <a href={ `/orders/${order.id}` }>{order.id}</a>
+            <a href={`/orders/${order.id}`}>{order.id}</a>
           </th>
           <td>{order.dentistName}</td>
           <td>{order.patientName}</td>
           <td>{order.dentistNote}</td>
-          {renderStatusBadge(order.status)}
+          <td >{renderStatusBadge(order.status)}</td>
           <td>{formatToVnd(order.finalAmount)}</td>
           <td>{formatDate(order.createdDate, "LL")}</td>
           <td>{formatDate(order.completedDate, "LL")}</td>
