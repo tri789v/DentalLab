@@ -7,14 +7,14 @@ function Dashboard() {
   return (
     <>
       <MenuNavbar />
-      <div class="flex flex-col h-screen bg-gray-100 mt-20">
+      <div class="flex flex-col h-screen bg-gray-100">
         <div class="flex-1 flex">
           <Sidebar />
 
           <UsersManagement />
         </div>
       </div>
-      
+
     </>
   );
 }

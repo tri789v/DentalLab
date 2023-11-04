@@ -73,7 +73,7 @@ export function UsersManagement() {
     <div class="">
 
 
-      <div class="bg-white p-4 rounded-md ">
+      <div class="bg-white p-4 rounded-md mt-24">
         <div className="flex w-full justify-between">
           <h2 class="text-gray-500 text-lg font-semibold pb-4">
             Danh sách tài khoản
