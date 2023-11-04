@@ -19,33 +19,34 @@ const MenuNavbar = () => {
         }
     };
 
-    const profileButton = (
-        <div className="dropdown dropdown-end">
-            <label tabIndex={0} className="btn btn-ghost">
-                Hi, {LocalStorageUtils.getToken() && username}
-            </label>
-            <ul
-                tabIndex={0}
-                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                <li>
-                    <a className="justify-between" href="/profile">
-                        Tài khoản
-                        <span className="badge">New</span>
-                    </a>
-                </li>
-                {renderAdminDashboardButton()}
-                <li>
-                    <a
-                        onClick={() => {
-                            localStorage.clear();
-                        }}
-                        href="/">
-                        Đăng xuất
-                    </a>
-                </li>
-            </ul>
-        </div>
-    );
+  const profileButton = (
+    <div className="dropdown dropdown-end">
+      <label tabIndex={0} className="btn btn-ghost">
+        Hi, {LocalStorageUtils.getToken() && username}
+      </label>
+      <ul
+        tabIndex={0}
+        className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+        <li>
+          <a className="justify-between" href="/profile">
+            Tài khoản
+            <span className="badge">New</span>
+          </a>
+        </li>
+        {renderAdminDashboardButton()}
+        <li>
+          <a
+            onClick={() => {
+              LocalStorageUtils.removeItem('token')
+              LocalStorageUtils.removeItem('currentUser')
+            }}
+            href="/">
+            Đăng xuất
+          </a>
+        </li>
+      </ul>
+    </div>
+  );
 
     const renderLoginButton = (
         <a className="btn btn-ghost" href="/login">

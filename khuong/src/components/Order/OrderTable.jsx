@@ -24,7 +24,10 @@ export const OrderTable = ({ orders }) => {
   ];
 
   const renderStatusBadge = (status) => (
-    <td className={`badge badge-${MAPPING_ORDER_STATUS_BADGE[status]}`}>
+    <td
+      className={`badge badge-${
+        MAPPING_ORDER_STATUS_BADGE[status] || "secondary"
+      }`}>
       {status}
     </td>
   );
