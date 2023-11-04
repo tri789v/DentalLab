@@ -34,15 +34,15 @@ export const OrderTable = ({orders}) => {
       <tbody>
         <tr className="hover">
           <th>
-            <a href="#">{order.id}</a>
+            <a href={ `/orders/${order.id}` }>{order.id}</a>
           </th>
           <td>{order.dentistName}</td>
           <td>{order.patientName}</td>
           <td>{order.dentistNote}</td>
           {renderStatusBadge(order.status)}
           <td>{formatToVnd(order.finalAmount)}</td>
-          <td>{formatDate(order.createdDate, "L LT")}</td>
-          <td>{formatDate(order.completedDate, "LL LT")}</td>
+          <td>{formatDate(order.createdDate, "LL")}</td>
+          <td>{formatDate(order.completedDate, "LL")}</td>
         </tr>
       </tbody>
     ));

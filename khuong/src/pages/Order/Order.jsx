@@ -50,7 +50,7 @@ function Order() {
 
     try {
       const response = await authenticatedApiInstance(accessToken).get(
-        `${GET_PRODUCTS_BY_CATEGORY}/${id}`,
+        `${GET_PRODUCTS_BY_CATEGORY}?categoryId=${id}`,
       );
       setProductListName(response.data["items"]);
     } catch (err) {

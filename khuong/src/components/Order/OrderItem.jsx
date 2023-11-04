@@ -33,21 +33,27 @@ export function OrderItem(props) {
               <div class="flex justify-start items-start flex-col space-y-2">
                 <p class="text-sm dark:text-white leading-none text-gray-800">
                   <span class="dark:text-gray-400 text-gray-300">
-                    Phân loại:{" "}
-                  </span>{" "}
-                  {item.product.categoryName}
+                    Phân loại:
+                  </span>
+                  {` ${item.product.categoryName}`}
                 </p>
                 <p class="text-sm dark:text-white leading-none text-gray-800">
                   <span class="dark:text-gray-400 text-gray-300">
-                    Vị trí răng:{" "}
-                  </span>{" "}
-                  {item.teethPosition.positionName}
+                    Vị trí răng:
+                  </span>
+                  {` ${item.teethPosition.positionName}`}
                 </p>
                 <p class="text-sm dark:text-white leading-none text-gray-800">
                   <span class="dark:text-gray-400 text-gray-300">
-                    Ghi chú nha khoa:{" "}
-                  </span>{" "}
-                  {item.note}
+                    Mô tả răng:
+                  </span>
+                  {` ${item.teethPosition.description}`}
+                </p>
+                <p class="text-sm dark:text-white leading-none text-gray-800">
+                  <span class="dark:text-gray-400 text-gray-300">
+                    Ghi chú nha khoa: 
+                  </span>
+                  {` ${item.note}`}
                 </p>
               </div>
             </div>
