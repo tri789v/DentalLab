@@ -2,15 +2,15 @@ import CartOrder from "../../components/Order/CartOrder";
 import React from "react";
 import Footer from "../../components/Footer";
 import MenuNavbar from "../../components/MenuNavbar";
-import {Fragment, useEffect, useState} from "react";
-import {authenticatedApiInstance} from "../../utils/ApiInstance";
+import { Fragment, useEffect, useState } from "react";
+import { authenticatedApiInstance } from "../../utils/ApiInstance";
 import {
   GET_CATEGORY_URL,
   GET_PRODUCTS_BY_CATEGORY,
 } from "../../utils/constants";
-import {ToastError, ToastSuccess} from "../../utils/Toastify";
+import { ToastError, ToastSuccess } from "../../utils/Toastify";
 import LocalStorageUtils from "../../utils/LocalStorageUtils";
-import {formatToVnd} from "../../utils/NumberFormat";
+import { formatToVnd } from "../../utils/NumberFormat";
 import ToothRadioInput from "../../components/Order/ToothRadioInput";
 
 function Order() {
@@ -62,6 +62,7 @@ function Order() {
 
     try {
       const response = await authenticatedApiInstance(accessToken).get(
+        `${GET_PRODUCTS_BY_CATEGORY(id)}`,
         `${GET_PRODUCTS_BY_CATEGORY(id)}`,
       );
       setProductListName(response.data["items"]);
