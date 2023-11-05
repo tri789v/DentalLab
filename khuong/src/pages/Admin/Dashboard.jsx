@@ -1,7 +1,7 @@
 import React from "react";
 import MenuNavbar from "../../components/MenuNavbar";
-import { Sidebar } from "../../components/Admin/Sidebar";
-import { UsersManagement } from "../../components/Admin/UsersManagement";
+import {Sidebar} from "../../components/Admin/Sidebar";
+import {UsersManagement} from "./UsersManagement";
 
 function Dashboard({componentChild}) {
   return (
@@ -11,10 +11,9 @@ function Dashboard({componentChild}) {
         <div class="flex-1 flex">
           <Sidebar />
 
-        {componentChild}
+          {componentChild}
         </div>
       </div>
-
     </>
   );
 }

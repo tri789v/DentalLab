@@ -18,6 +18,7 @@ export default function CartOrder({
   const [finalAmount, setFinalAmount] = useState(0);
   const [isOpen, setIsOpen] = useState(initialValue);
   const accessToken = localStorage.getItem("token");
+  const currentId = LocalStorageUtils.getCurrentUser().id;
 
   useEffect(() => {
     let finalTotal = 0;
@@ -57,7 +58,7 @@ export default function CartOrder({
         dentalId: dentalId,
         dentistName: sharedInfo.dentistName,
         patientName: sharedInfo.patientName,
-        patientGender: sharedInfo.patientGender,
+        patientGender: sharedInfo.patientGender || "Male",
         patientPhoneNumber: sharedInfo.patientPhoneNumber,
         dentistNote: "Cắt đôi nỗi sầu",
         status: "pending",
@@ -72,7 +73,6 @@ export default function CartOrder({
         ToastError("Vui lòng thêm sản phẩm vào giỏ hàng")
         return;
       }
-
       
 
       const response = await authenticatedApiInstance(accessToken).post(
@@ -81,6 +81,9 @@ export default function CartOrder({
       );
       if (SUCCESS_RESPONSE_STATUS.includes(response.status)) {
         ToastSuccess("Đặt hàng thành công, cảm ơn quý khách");
+        LocalStorageUtils.removeItem(`shoppingCart:${currentId}`)
+        await new Promise(r => setTimeout(r, 200))
+        window.location.reload();
       } else {
         ToastError("Hệ thống có trục trặc, vui lòng thử lại sau");
       }
@@ -90,7 +93,7 @@ export default function CartOrder({
   };
 
   return (
-    <Transition.Root show={initialValue} as={Fragment}>
+    <Transition.Root show={initialValue} as={Fragment}  style={{zIndex: 999}}>
       <Dialog as="div" className="relative z-10" onClose={setIsOpen}>
         <Transition.Child
           as={Fragment}

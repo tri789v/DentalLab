@@ -16,9 +16,9 @@ import OrderDetail from "./pages/Order/OrderDetail";
 import LocalStorageUtils from "./utils/LocalStorageUtils";
 import Dashboard from "./pages/Admin/Dashboard";
 import Stage from "./pages/Stage";
-import { CategoryManagement } from "./components/Admin/CategoryManagement";
-import { UsersManagement } from "./components/Admin/UsersManagement";
-import { ProductManagement } from "./components/Admin/ProductManagement";
+import { UsersManagement } from "./pages/Admin/UsersManagement";
+import { CategoryManagement } from "./pages/Admin/CategoryManagement";
+import { ProductManagement } from "./pages/Admin/ProductManagement";
 
 function App() {
     const EMPLOYEE_ROLE = ["admin", "staff", "reception"]

@@ -17,7 +17,7 @@ const CategoryList = () => {
     const fetchCategories = async () => {
         const accessToken = localStorage.getItem('token');
         try {
-            const response = await authenticatedApiInstance(accessToken).get(GET_CATEGORY_URL);
+            const response = await authenticatedApiInstance(accessToken).get(GET_CATEGORY_URL(''));
             return response.data['items'];
         } catch (err) {
             await ToastError(err.response?.data['Error']);

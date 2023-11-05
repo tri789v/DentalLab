@@ -1,400 +1,76 @@
 import React from "react";
+import {CREATE_ORDER_ACTIONS} from "../../reducers/Orders/CreateReducer";
 
-export default function ToothRadioInput({setSelectedTeethPosition}) {
-  const handleSelectTeethRadioInput = (e) => {
-    if (e) {
-      e.target.disabled = true;
-      setSelectedTeethPosition(e.target.value);
-    }
+export default function ToothRadioInput({dispatch}) {
+  const toothPositions = [
+    {id: 8, label: "1-8", img: "r1.png"},
+    {id: 32, label: "4-8", img: "r32.png"},
+    {id: 7, label: "1-7", img: "r2.png"},
+    {id: 31, label: "4-7", img: "r31.png"},
+    {id: 6, label: "1-6", img: "r3.png"},
+    {id: 30, label: "4-6", img: "r30.png"},
+    {id: 5, label: "1-5", img: "r4.png"},
+    {id: 29, label: "4-5", img: "r29.png"},
+    {id: 4, label: "1-4", img: "r5.png"},
+    {id: 28, label: "4-4", img: "r28.png"},
+    {id: 3, label: "1-3", img: "r6.png"},
+    {id: 27, label: "4-3", img: "r27.png"},
+    {id: 2, label: "1-2", img: "r7.png"},
+    {id: 26, label: "4-2", img: "r26.png"},
+    {id: 1, label: "1-1", img: "r8.png"},
+    {id: 25, label: "4-1", img: "r25.png"},
+    {id: 9, label: "2-1", img: "r9.png"},
+    {id: 17, label: "3-1", img: "r24.png"},
+    {id: 10, label: "2-2", img: "r10.png"},
+    {id: 18, label: "3-2", img: "r23.png"},
+    {id: 11, label: "2-3", img: "r11.png"},
+    {id: 19, label: "3-3", img: "r22.png"},
+    {id: 12, label: "2-4", img: "r12.png"},
+    {id: 20, label: "3-4", img: "r21.png"},
+    {id: 13, label: "2-5", img: "r13.png"},
+    {id: 21, label: "3-5", img: "r20.png"},
+    {id: 14, label: "2-6", img: "r14.png"},
+    {id: 22, label: "3-6", img: "r19.png"},
+    {id: 15, label: "2-7", img: "r15.png"},
+    {id: 23, label: "3-7", img: "r18.png"},
+    {id: 16, label: "2-8", img: "r16.png"},
+    {id: 24, label: "3-8", img: "r17.png"},
+  ];
+
+  const handleSelectTeethRadioInput = (value) => {
+    console.log(value)
+    dispatch({
+      type: CREATE_ORDER_ACTIONS.setField,
+      field: "selectedTeethPosition",
+      value,
+    });
+    dispatch({
+      type: CREATE_ORDER_ACTIONS.setField,
+      field: "previousSelectedTeethPosition",
+      value,
+    });
   };
 
   return (
-    <div class="grid grid-rows-2 grid-flow-col gap-4 text-center">
-      <div>
-        <img src="./imgMenu/r1.png" className="max-w-2rem" />
-        <p class="text-base">1-8</p>
-        <input
-          type="radio"
-          id="8"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={8}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-
-      <div>
-        <img src="./imgMenu/r32.png" className="max-w-2rem" />
-        <p class="text-base">4-8</p>
-        <input
-          type="radio"
-          id="32"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={32}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r2.png" className="max-w-2rem" />
-        <p class="text-base">1-7</p>
-        <input
-          type="radio"
-          id="7"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={7}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r31.png" className="max-w-2rem" />
-        <p class="text-base">4-7</p>
-        <input
-          type="radio"
-          id="31"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={31}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r3.png" className="max-w-2rem" />
-        <p class="text-base">1-6</p>
-        <input
-          type="radio"
-          id="6"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={6}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r30.png" className="max-w-2rem" />
-        <p class="text-base">4-6</p>
-        <input
-          type="radio"
-          id="30"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={30}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r4.png" className="max-w-2rem" />
-        <p class="text-base">1-5</p>
-        <input
-          type="radio"
-          id="5"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={5}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r29.png" className="max-w-2rem" />
-        <p class="text-base">4-5</p>
-        <input
-          type="radio"
-          id="29"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={29}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r5.png" className="max-w-2rem" />
-        <p class="text-base">1-4</p>
-        <input
-          type="radio"
-          id="4"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={4}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r28.png" className="max-w-2rem" />
-        <p class="text-base">4-4</p>
-        <input
-          type="radio"
-          id="28"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={28}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r6.png" className="max-w-2rem" />
-        <p class="text-base">1-3</p>
-        <input
-          type="radio"
-          id="3"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={3}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r27.png" className="max-w-2rem" />
-        <p class="text-base">4-3</p>
-        <input
-          type="radio"
-          id="27"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={27}
-          onChange={(e) => handleSelectTeethRadioInput(27)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r7.png" className="max-w-2rem" />
-        <p class="text-base">1-2</p>
-        <input
-          type="radio"
-          id="2"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={2}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r26.png" className="max-w-2rem" />
-        <p class="text-base">4-2</p>
-        <input
-          type="radio"
-          id="26"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={26}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r8.png" className="max-w-2rem" />
-        <p class="text-base">1-1</p>
-        <input
-          type="radio"
-          id="1"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={1}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r25.png" className="max-w-2rem" />
-        <p class="text-base">4-1</p>
-        <input
-          type="radio"
-          id="25"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={25}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r9.png" className="max-w-2rem" />
-        <p class="text-base">2-1</p>
-        <input
-          type="radio"
-          id="9"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={9}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r24.png" className="max-w-2rem" />
-        <p class="text-base">3-1</p>
-        <input
-          type="radio"
-          id="17"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={17}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r10.png" className="max-w-2rem" />
-        <p class="text-base">2-2</p>
-        <input
-          type="radio"
-          id="10"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={10}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r23.png" className="max-w-2rem" />
-        <p class="text-base">3-2</p>
-        <input
-          type="radio"
-          id="18"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={18}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r11.png" className="max-w-2rem" />
-        <p class="text-base">2-3</p>
-        <input
-          type="radio"
-          id="11"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={11}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r22.png" className="max-w-2rem" />
-        <p class="text-base">3-3</p>
-        <input
-          type="radio"
-          id="19"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={19}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r12.png" className="max-w-2rem" />
-        <p class="text-base">2-4</p>
-        <input
-          type="radio"
-          id="12"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={12}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r21.png" className="max-w-2rem" />
-        <p class="text-base">3-4</p>
-        <input
-          type="radio"
-          id="20"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={20}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r13.png" className="max-w-2rem" />
-        <p class="text-base">2-5</p>
-        <input
-          type="radio"
-          id="13"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={13}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r20.png" className="max-w-2rem" />
-        <p class="text-base">3-5</p>
-        <input
-          type="radio"
-          id="21"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={21}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r14.png" className="max-w-2rem" />
-        <p class="text-base">2-6</p>
-        <input
-          type="radio"
-          id="14"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={14}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r19.png" className="max-w-2rem" />
-        <p class="text-base">3-6</p>
-        <input
-          type="radio"
-          id="22"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={22}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r15.png" className="max-w-2rem" />
-        <p class="text-base">2-7</p>
-        <input
-          type="radio"
-          id="15"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={15}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r18.png" className="max-w-2rem" />
-        <p class="text-base">3-7</p>
-        <input
-          type="radio"
-          id="23"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={23}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r16.png" className="max-w-2rem" />
-        <p class="text-base">2-8</p>
-        <input
-          type="radio"
-          id="16"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={16}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
-      <div>
-        <img src="./imgMenu/r17.png" className="max-w-2rem" />
-        <p class="text-base">3-8</p>
-        <input
-          type="radio"
-          id="24"
-          name="tooth-position"
-          className="radio checkbox-xs checkbox-info"
-          value={24}
-          onChange={(e) => handleSelectTeethRadioInput(e)}
-        />
-      </div>
+    <div className="grid grid-rows-2 grid-flow-col gap-4 text-center">
+      {toothPositions.map((position) => (
+        <div key={position.id}>
+          <img
+            src={`./imgMenu/${position.img}`}
+            className="max-w-2rem"
+            alt={position.label}
+          />
+          <p className="text-base">{position.label}</p>
+          <input
+            type="radio"
+            id={position.id}
+            name="tooth-position"
+            className="radio checkbox-xs checkbox-info"
+            value={position.id}
+            onChange={() => handleSelectTeethRadioInput(position.id)}
+          />
+        </div>
+      ))}
     </div>
   );
 }

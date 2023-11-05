@@ -1,54 +1,55 @@
 import CartOrder from "../../components/Order/CartOrder";
-import React from "react";
+import React, {useReducer} from "react";
 import Footer from "../../components/Footer";
 import MenuNavbar from "../../components/MenuNavbar";
-import { Fragment, useEffect, useState } from "react";
-import { authenticatedApiInstance } from "../../utils/ApiInstance";
+import {Fragment, useEffect, useState} from "react";
+import {authenticatedApiInstance} from "../../utils/ApiInstance";
 import {
   GET_CATEGORY_URL,
   GET_PRODUCTS_BY_CATEGORY,
 } from "../../utils/constants";
-import { ToastError, ToastSuccess } from "../../utils/Toastify";
+import {ToastError, ToastSuccess} from "../../utils/Toastify";
 import LocalStorageUtils from "../../utils/LocalStorageUtils";
-import { formatToVnd } from "../../utils/NumberFormat";
+import {formatToVnd} from "../../utils/NumberFormat";
 import ToothRadioInput from "../../components/Order/ToothRadioInput";
+import {
+  CREATE_ORDER_ACTIONS,
+  INITIAL_STATE_CREATE_ORDER,
+  createOrderReducer,
+} from "../../reducers/Orders/CreateReducer";
 
 function Order() {
-  const [categoryListName, setCategoryListName] = useState([]);
-  const [dentistName, setDentistName] = useState("");
-  const [dentistNameError, setDentistNameError] = useState("");
-  const [gender, setGender] = useState("");
-  const [note, setNote] = useState("");
-  const [openCardOrder, setOpenCardOrder] = useState(false);
-  const [patientName, setPatientName] = useState("");
-  const [patientNameError, setPatientNameError] = useState("");
-  const [patientPhoneError, setPatientPhoneError] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [productListName, setProductListName] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState({});
-  const [selectedTeethPosition, setSelectedTeethPosition] = useState(0);
-  const [sharedInfo, setSharedInfo] = useState({});
-  const [shoppingCart, setShoppingCart] = useState([]);
-  const [toothPositionError, setToothPositionError] = useState("");
+  const [state, dispatch] = useReducer(
+    createOrderReducer,
+    INITIAL_STATE_CREATE_ORDER,
+  );
 
-  const currentId = LocalStorageUtils.getCurrentUser().id; 
+  const currentId = LocalStorageUtils.getCurrentUser().id;
 
   useEffect(() => {
-    fetchCategories().then((items) => setCategoryListName(items));
+    fetchCategories().then((items) =>
+      dispatch({
+        type: CREATE_ORDER_ACTIONS.setField,
+        field: "categoryListName",
+        value: items,
+      }),
+    );
   }, []);
 
   useEffect(() => {
-    if (shoppingCart.length > 0) {
-      LocalStorageUtils.setItem(`shoppingCart:${currentId}`, shoppingCart);
-      setShoppingCart([]);
+    if (state.shoppingCart.length > 0) {
+      LocalStorageUtils.setItem(
+        `shoppingCart:${currentId}`,
+        state.shoppingCart,
+      );
     }
-  }, [shoppingCart])
+  }, [state.shoppingCart]);
 
   const fetchCategories = async () => {
     const accessToken = localStorage.getItem("token");
     try {
       const response = await authenticatedApiInstance(accessToken).get(
-        GET_CATEGORY_URL,
+        GET_CATEGORY_URL(""),
       );
       return response.data["items"];
     } catch (err) {
@@ -65,73 +66,97 @@ function Order() {
         `${GET_PRODUCTS_BY_CATEGORY(id)}`,
         `${GET_PRODUCTS_BY_CATEGORY(id)}`,
       );
-      setProductListName(response.data["items"]);
+      dispatch({
+        type: CREATE_ORDER_ACTIONS.setField,
+        field: "productListName",
+        value: response.data.items,
+      });
     } catch (err) {
       await ToastError(err.response?.data["Error"]);
     }
   };
 
   const handleOpenCardOrder = () => {
-    setOpenCardOrder(true);
+    dispatch({
+      type: CREATE_ORDER_ACTIONS.setField,
+      field: "openCardOrder",
+      value: true,
+    });
   };
 
   const selectPricebyProduct = (e) => {
-    productListName.forEach((product) => {
+    state.productListName.forEach((product) => {
       if (product.id.toString() === e.target.value) {
-        setSelectedProduct(product);
+        dispatch({
+          type: CREATE_ORDER_ACTIONS.setField,
+          field: "selectedProduct",
+          value: product,
+        });
       }
     });
   };
 
   const handleAddToCart = () => {
-    let errors = {};
+    let errors = {
+      dentistNameError: "",
+      patientNameError: "",
+      phoneNumberError: "",
+      toothPositionError: "",
+    };
 
-    if (dentistName === "") {
-      errors.dentistName = "Vui lòng điền thông tin bác sĩ";
+    if (state.dentistName === "") {
+      errors.dentistNameError = "Vui lòng điền thông tin bác sĩ";
     }
 
-    if (patientName === "") {
-      errors.patientName = "Vui lòng điền thông tin bệnh nhân";
+    if (state.patientName === "") {
+      errors.patientNameError = "Vui lòng điền thông tin bệnh nhân";
     }
 
-    if (isValidPhoneNumber(phoneNumber) === false) {
-      errors.phoneNumber = "Số điện thoại sai định dạng";
+    if (isValidPhoneNumber(state.phoneNumber) === false) {
+      errors.phoneNumberError = "Số điện thoại sai định dạng";
     }
 
-    if (selectedTeethPosition === 0) {
-      errors.teethPosition = "Vui lòng chọn loại răng";
+    if (Number(state.selectedTeethPosition) === 0) {
+      errors.toothPositionError = "Vui lòng chọn loại răng";
     }
 
-    if (Object.keys(errors).length > 0) {
-      setPatientNameError(errors.patientName || "");
-      setDentistNameError(errors.dentistName || "");
-      setPatientPhoneError(errors.phoneNumber || "");
-      setToothPositionError(errors.teethPosition || "")
-      window.scrollTo({top: 0, behavior: "smooth"})
-      ToastError(toothPositionError || "Form không hợp lệ");
+    if (
+      state.previousSelectedTeethPosition !== 0 &&
+      LocalStorageUtils.getItem(`shoppingCart:${currentId}`)
+        ?.map((item) => item.teethPositionId)
+        .includes(Number(state.selectedTeethPosition))
+    ) {
+      errors.toothPositionError =
+        "Loại răng này đã có trong giỏ hàng, vui lòng thử lại";
+    }
+
+    if (Object.values(errors).filter((item) => item !== "").length > 0) {
+      dispatch({
+        type: CREATE_ORDER_ACTIONS.setErrors,
+        errors: errors,
+      });
+      window.scrollTo({top: 0, behavior: "smooth"});
+      ToastError(errors.toothPositionError || "Form không hợp lệ");
       return;
     }
 
     let orderItem = {
-      productId: selectedProduct.id,
-      productName: selectedProduct.name,
-      teethPositionId: selectedTeethPosition,
-      totalAmount: selectedProduct.costPrice,
-      note: note,
+      productId: state.selectedProduct.id,
+      productName: state.selectedProduct.name,
+      teethPositionId: state.selectedTeethPosition,
+      totalAmount: state.selectedProduct.costPrice,
+      note: state.note,
+      sharedInfo: {
+        dentalId: currentId,
+        dentistName: state.dentistName,
+        patientName: state.patientName,
+        patientGender: state.gender,
+        patientPhoneNumber: state.phoneNumber,
+      },
     };
 
-    let sharedItem = {
-      dentalId: currentId,
-      dentistName: dentistName,
-      patientName: patientName,
-      patientGender: gender,
-      patientPhoneNumber: phoneNumber,
-    };
-
-    if (Object.keys(selectedProduct).length !== 0) {
-      setShoppingCart((shoppingCart) => [orderItem, ...shoppingCart]);
-      setSharedInfo(sharedItem);
-      setSelectedTeethPosition(0)
+    if (Object.keys(state.selectedProduct).length !== 0) {
+      dispatch({type: CREATE_ORDER_ACTIONS.addToCart, payload: orderItem});
       ToastSuccess("Thêm đơn hàng thành công");
     } else {
       ToastError("Đơn đang trống");
@@ -141,6 +166,23 @@ function Order() {
   const isValidPhoneNumber = (phoneNumber) => {
     const regexPhoneNumber = /(0[2|3|5|7|8|9])+([0-9]{8})\b/g;
     return phoneNumber.match(regexPhoneNumber) ? true : false;
+  };
+
+  const handleSetFieldValueAndRemoveError = (e, field) => {
+    e.preventDefault();
+    const errorField =
+      field === "phoneNumber" ? "patientPhoneError" : `${field}Error`;
+
+    dispatch({
+      type: CREATE_ORDER_ACTIONS.setField,
+      field: field,
+      value: e.target.value,
+    });
+    dispatch({
+      type: CREATE_ORDER_ACTIONS.setField,
+      field: errorField,
+      value: "",
+    });
   };
 
   return (
@@ -174,13 +216,15 @@ function Order() {
                         placeholder="Nhập tên bác sỹ"
                         autoFocus={true}
                         className={`input input-bordered w-full max-w-xs input-${
-                          dentistNameError !== "" ? "error" : "info"
+                          state.dentistNameError !== "" ? "error" : "info"
                         } `}
-                        onChange={(e) => setDentistName(e.target.value)}
+                        onChange={(e) =>
+                          handleSetFieldValueAndRemoveError(e, "dentistName")
+                        }
                       />
                       <label className="label">
                         <span className="label-text-alt text-red-500">
-                          {dentistNameError}
+                          {state.dentistNameError}
                         </span>
                       </label>
                     </div>
@@ -196,13 +240,15 @@ function Order() {
                         type="text"
                         placeholder="Nhập số điện thoại"
                         className={`input input-bordered w-full max-w-xs input-${
-                          patientPhoneError !== "" ? "error" : "info"
+                          state.patientPhoneError !== "" ? "error" : "info"
                         } `}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        onChange={(e) =>
+                          handleSetFieldValueAndRemoveError(e, "phoneNumber")
+                        }
                       />
                       <label className="label">
                         <span className="label-text-alt text-red-500">
-                          {patientPhoneError}
+                          {state.patientPhoneError}
                         </span>
                       </label>
                     </div>
@@ -212,20 +258,22 @@ function Order() {
                       <label
                         class="block uppercase text-blueGray-600 text-xs font-bold mb-2 "
                         htmlfor="grid-password">
-                          Bệnh nhân
+                        Bệnh nhân
                       </label>
                       <input
                         type="text"
                         placeholder="Nhập tên bệnh nhân"
                         autoFocus={true}
                         className={`input input-bordered w-full max-w-xs input-${
-                          patientNameError !== "" ? "error" : "info"
+                          state.patientNameError !== "" ? "error" : "info"
                         } `}
-                        onChange={(e) => setPatientName(e.target.value)}
+                        onChange={(e) =>
+                          handleSetFieldValueAndRemoveError(e, "patientName")
+                        }
                       />
                       <label className="label">
                         <span className="label-text-alt text-red-500">
-                          {patientNameError}
+                          {state.patientNameError}
                         </span>
                       </label>
                     </div>
@@ -239,7 +287,13 @@ function Order() {
                       </label>
                       <select
                         className="select select-info w-full max-w-xs"
-                        onChange={(e) => setGender(e.target.value)}>
+                        onChange={(e) =>
+                          dispatch({
+                            type: CREATE_ORDER_ACTIONS.setField,
+                            field: "gender",
+                            value: e.target.value,
+                          })
+                        }>
                         <option disabled selected>
                           Chọn giới tính
                         </option>
@@ -268,7 +322,7 @@ function Order() {
                           <option disabled selected>
                             Chọn vật liệu răng
                           </option>
-                          {categoryListName.map((cart) => (
+                          {state.categoryListName.map((cart) => (
                             <option value={cart.id}>{cart.categoryName}</option>
                           ))}
                         </select>
@@ -288,15 +342,13 @@ function Order() {
                           <option disabled selected>
                             Chọn sản phẩm
                           </option>
-                          {productListName.map((cart) => (
+                          {state.productListName.map((cart) => (
                             <option value={cart.id}>{cart.name} </option>
                           ))}
                         </select>
                       </div>
                     </div>
-
                     <div class="w-full lg:w-6/12 px-4"></div>
-
                     <div class="w-full lg:w-6/12 pl-24">
                       <div class=" w-full mb-3">
                         <label
@@ -306,16 +358,17 @@ function Order() {
                         </label>
                         <input
                           className="input input-bordered input-info w-full max-w-xs "
-                          value={formatToVnd(selectedProduct.costPrice || "0", "VND")}
+                          value={formatToVnd(
+                            state.selectedProduct.costPrice || "0",
+                            "VND",
+                          )}
                           disabled
                         />
                       </div>
                     </div>
 
                     <form class="pt-10 pb-10 px-20 ">
-                      <ToothRadioInput
-                        setSelectedTeethPosition={setSelectedTeethPosition}
-                      />
+                      <ToothRadioInput dispatch={dispatch} />
                     </form>
                   </div>
 
@@ -331,7 +384,11 @@ function Order() {
                             className="textarea textarea-info focus:ring w-full"
                             rows="4"
                             onChange={(e) =>
-                              setNote(e.target.value)
+                              dispatch({
+                                type: CREATE_ORDER_ACTIONS.setField,
+                                field: "note",
+                                value: e.target.value,
+                              })
                             }></textarea>
                         </div>
                       </div>
@@ -344,10 +401,18 @@ function Order() {
               Xem thêm
             </button>
             <CartOrder
-              initialValue={openCardOrder}
-              onChange={() => setOpenCardOrder(false)}
-              products={LocalStorageUtils.getItem(`shoppingCart:${currentId}`) || []}
-              sharedInfo={sharedInfo}
+              initialValue={state.openCardOrder}
+              onChange={() =>
+                dispatch({
+                  type: CREATE_ORDER_ACTIONS.setField,
+                  field: "openCardOrder",
+                  value: false,
+                })
+              }
+              products={
+                LocalStorageUtils.getItem(`shoppingCart:${currentId}`) || []
+              }
+              sharedInfo={state.sharedInfo}
             />
             <button className="btn btn-ghost" onClick={handleAddToCart}>
               Thêm vào giỏ hàng

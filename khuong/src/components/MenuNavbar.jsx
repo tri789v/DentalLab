@@ -78,7 +78,7 @@ const MenuNavbar = () => {
   return (
     <div
       className="navbar bg-base-100 border border-solid top-0 fixed"
-      style={{zIndex: 9999}}>
+      style={{zIndex: 900}}>
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost lg:hidden">

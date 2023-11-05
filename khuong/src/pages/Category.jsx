@@ -19,7 +19,8 @@ const Category = (props) => {
     const fetchProductsByCategory = async () => {
         const accessToken = localStorage.getItem('token');
         try {
-            const response = await authenticatedApiInstance(accessToken).get(`${GET_PRODUCTS_BY_CATEGORY(id)}`);
+            const url = GET_PRODUCTS_BY_CATEGORY(id);
+            const response = await authenticatedApiInstance(accessToken).get(url);
             return response.data['items'];
         } catch (err) {
             await ToastError(err.response?.data['Error']);

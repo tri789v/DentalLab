@@ -1,6 +1,9 @@
 const BASE_API_URL =
   "https://dentallabmanagementapi20231013174811.azurewebsites.net/api/v1";
 export const LOGIN_URL = `${BASE_API_URL}/auth/login`;
+export const CREATE_NEW_USER = `${BASE_API_URL}/accounts`;
+export const DELETE_USER = (id) => `${BASE_API_URL}/accounts/${id}`;
+export const UPDATE_USER = (id) => `${BASE_API_URL}/accounts/${id}`;
 export const GET_CATEGORY_URL = (paramsString) => `${BASE_API_URL}/categories?${paramsString}`;
 export const GET_PRODUCTS_BY_CATEGORY = (id) => `${BASE_API_URL}/products?categoryId=${id}`;
 export const UPDATE_DENTAL_PROFILE = `${BASE_API_URL}/dentals`;
