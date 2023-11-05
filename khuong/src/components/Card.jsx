@@ -4,11 +4,11 @@ import LocalStorageUtils from "../utils/LocalStorageUtils";
 
 export const Card = (props) => (
     <a key={props.cardItem.id} href={`/categories/${props.cardItem.id}`} className="group">
-        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7 border shadow-md">
             <img
                 src={props.cardItem.image || "https://www.brookwestfamilydentistry.com/wp-content/uploads/2018/08/Veneers-1.jpg"}
                 alt={`category-${props.cardItem.id}`}
-                className="h-full w-full object-cover object-center "
+                className="h-64 w-full object-cover object-center "
             />
         </div>
         <h3 className="mt-1 text-lg font-medium text-gray-900">{props.cardItem.categoryName}</h3>
@@ -33,7 +33,7 @@ export const CardProduct = (props) => {
                     <img
                         src="https://www.brookwestfamilydentistry.com/wp-content/uploads/2018/08/Veneers-1.jpg"
                         alt={`product-${props.cardItem.id}`}
-                        className="h-full w-full object-cover object-center "
+                        className="h-64 w-full object-cover object-center "
                     />
                 </div>
 

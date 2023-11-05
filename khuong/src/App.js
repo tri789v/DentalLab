@@ -19,6 +19,7 @@ import Stage from "./pages/Stage";
 import { UsersManagement } from "./pages/Admin/UsersManagement";
 import { CategoryManagement } from "./pages/Admin/CategoryManagement";
 import { ProductManagement } from "./pages/Admin/ProductManagement";
+import Warranty from "./pages/Warranty";
 
 function App() {
     const EMPLOYEE_ROLE = ["admin", "staff", "reception"]
@@ -61,6 +62,7 @@ function App() {
                 <Route path="/viewOrder" element={<ViewOrder />}></Route>
                 <Route path="/orders/:id" element={<OrderDetail />} />
                 <Route path="/stage" element={<Stage />}></Route>
+                <Route path="/warranty" element={<Warranty />}></Route>
                 <Route path="/*" element={<NotFound />} />
             </Routes>
         </BrowserRouter>

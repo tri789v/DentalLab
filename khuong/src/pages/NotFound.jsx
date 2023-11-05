@@ -10,7 +10,7 @@ export const NotFound = () => (
         <h1 class="font-black text-gray-200 text-9xl">404</h1>
         <p class="mt-4 text-gray-500">Không thể tìm thấy trang bạn yêu cầu.</p>
         <br />
-        <a href="/" className="btn btn-primary">
+        <a href="/" className="btn btn-active btn-accent text-white">
           Trở lại trang chủ
         </a>
       </div>

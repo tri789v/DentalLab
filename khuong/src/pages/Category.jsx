@@ -1,16 +1,16 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import MenuNavbar from "../components/MenuNavbar";
 import Footer from "../components/Footer";
-import {authenticatedApiInstance} from "../utils/ApiInstance";
-import {GET_PRODUCTS_BY_CATEGORY} from "../utils/constants";
-import {ToastError} from "../utils/Toastify";
-import {Card, CardProduct} from "../components/Card";
-import {useParams} from "react-router-dom";
+import { authenticatedApiInstance } from "../utils/ApiInstance";
+import { GET_PRODUCTS_BY_CATEGORY } from "../utils/constants";
+import { ToastError } from "../utils/Toastify";
+import { Card, CardProduct } from "../components/Card";
+import { useParams } from "react-router-dom";
 import React from "react";
 
 const Category = (props) => {
   const [products, setProducts] = useState([]);
-  const {id} = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
     fetchProductsByCategory().then((items) => setProducts(items));
@@ -42,16 +42,16 @@ const Category = (props) => {
 
   const renderEmptyList = () => {
     return (
-      <div className="hero min-h-screen bg-base-200">
+      <div className="hero min-h-screen bg-base-200 bg-white">
         <div className="hero-content text-center">
           <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Hello there</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
+            <h1 className="text-4xl font-bold">Chưa có sản phẩm</h1>
+            <p className="py-5 pb-6">
+              Sản phẩm đang trong quá trình hoàn thiện
+              <br /> chúng tôi sẽ cố gắng cập nhật nhanh nhất có thể.
             </p>
-            <button className="btn btn-primary">Get Started</button>
+
+            <a className="btn btn-active btn-accent text-white" href="/categories">Quay trở lại</a>
           </div>
         </div>
       </div>
