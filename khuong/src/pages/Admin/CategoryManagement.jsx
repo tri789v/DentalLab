@@ -6,6 +6,7 @@ import {authenticatedApiInstance} from "../../utils/ApiInstance";
 import {ToastConfirmDelete, ToastError} from "../../utils/Toastify";
 import Pagination from "../../components/Pagination";
 import queryString from "query-string";
+import { CreateCategoryModal } from "../../components/Admin/Category/CreateCategoryModal";
 
 export function CategoryManagement() {
   const accessToken = LocalStorageUtils.getToken();
@@ -95,7 +96,7 @@ export function CategoryManagement() {
             </h2>
             <button
               class="btn btn-outline "
-              onClick={() => document.getElementById("my_modal_1").showModal()}>
+              onClick={() => document.getElementById("create_category_modal").showModal()}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -104,20 +105,7 @@ export function CategoryManagement() {
                 <path d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z" />
               </svg>
             </button>
-            <dialog id="my_modal_1" className="modal">
-              <div className="modal-box">
-                <form method="dialog">
-                  {/* if there is a button in form, it will close the modal */}
-                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                    ✕
-                  </button>
-                </form>
-                <h3 className="font-bold text-lg">Hello!</h3>
-                <p className="py-4">
-                  Press ESC key or click on ✕ button to close
-                </p>
-              </div>
-            </dialog>
+            <CreateCategoryModal/> 
           </div>
 
           <div class="my-1"></div>

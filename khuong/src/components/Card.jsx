@@ -6,7 +6,7 @@ export const Card = (props) => (
     <a key={props.cardItem.id} href={`/categories/${props.cardItem.id}`} className="group">
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
             <img
-                src="https://www.brookwestfamilydentistry.com/wp-content/uploads/2018/08/Veneers-1.jpg"
+                src={props.cardItem.image || "https://www.brookwestfamilydentistry.com/wp-content/uploads/2018/08/Veneers-1.jpg"}
                 alt={`category-${props.cardItem.id}`}
                 className="h-full w-full object-cover object-center "
             />
