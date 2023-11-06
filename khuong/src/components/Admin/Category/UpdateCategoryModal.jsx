@@ -2,10 +2,19 @@ import React, { useEffect, useState } from "react";
 import { ToastError, ToastSuccess } from "../../../utils/Toastify";
 import LocalStorageUtils from "../../../utils/LocalStorageUtils";
 import { authenticatedApiInstance } from "../../../utils/ApiInstance";
-import { CREATE_NEW_CATEGORY, CREATE_OR_UPDATE_CATEGORY, SUCCESS_RESPONSE_STATUS } from "../../../utils/constants";
+import { CREATE_NEW_CATEGORY, SUCCESS_RESPONSE_STATUS, UPDATE_OR_DELTE_CATEGORY } from "../../../utils/constants";
+import PropTypes from "prop-types";
 
-export function CreateCategoryModal() {
+UpdateCategoryModal.propTypes = {
+  categoryName: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  imageSrc: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
+  categoryId: PropTypes.number.isRequired,
+};
 
+export function UpdateCategoryModal(props) {
+  const [categoryId, setCategoryId] = useState(0)
   const [categoryName, setCategoryName] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('Inactive');
@@ -21,6 +30,15 @@ export function CreateCategoryModal() {
     }
   }, [categoryName, description, imageSrc])
 
+  useEffect(() => {
+    setCategoryId(props.categoryId)
+    setCategoryName(props.categoryName)
+    setDescription(props.description)
+    setStatus(props.status)
+    setImageSrc(props.imageSrc)
+  }, [props])
+  
+
   const handleCreateNewCategory = async (e) => {
     e.preventDefault(); 
     try {
@@ -31,11 +49,11 @@ export function CreateCategoryModal() {
         image: imageSrc,
       }
 
-      const response = await authenticatedApiInstance(accessToken).post(CREATE_NEW_CATEGORY, payload);
+      const response = await authenticatedApiInstance(accessToken).put(UPDATE_OR_DELTE_CATEGORY(categoryId), payload);
       if (SUCCESS_RESPONSE_STATUS.includes(response.status)) {
-        window.document.getElementById("create_category_modal").close();
+        window.document.getElementById("update_category_modal").close();
         await new Promise(r => setTimeout(r, 60))
-        await ToastSuccess(`Vật liệu ${categoryName} đã được thêm vào hệ thống`);
+        await ToastSuccess(`Vật liệu ${categoryName} đã được cập nhật`);
         setEmptyField();
         window.location.reload();
       }
@@ -45,6 +63,7 @@ export function CreateCategoryModal() {
   }
 
   const setEmptyField = () => {
+    setCategoryId(0);
     setCategoryName('');
     setDescription('');
     setStatus('Inactive');
@@ -52,7 +71,7 @@ export function CreateCategoryModal() {
   }
 
   return (
-    <dialog id="create_category_modal" className="modal">
+    <dialog id="update_category_modal" className="modal">
       <div className="modal-box max-w-xl">
         <form method="dialog" className="p-4">
           <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">

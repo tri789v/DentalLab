@@ -2,16 +2,30 @@ import React, {useEffect, useState} from "react";
 import {TableGenerator} from "../../utils/TableGenerator";
 import LocalStorageUtils from "../../utils/LocalStorageUtils";
 import {
-  GET_ALL_ACCOUNT,
   GET_CATEGORY_URL,
   GET_PRODUCT_URL,
+  SUCCESS_RESPONSE_STATUS,
+  UPDATE_OR_DELTE_PRODUCT,
 } from "../../utils/constants";
 import {authenticatedApiInstance} from "../../utils/ApiInstance";
-import {ToastConfirmDelete, ToastError} from "../../utils/Toastify";
+import {ToastError, ToastSuccess} from "../../utils/Toastify";
 import Pagination from "../../components/Pagination";
 import queryString from "query-string";
+import {CreateProductModal} from "../../components/Admin/Product/CreateProductModal";
+import {UpdateProductModal} from "../../components/Admin/Product/UpdateProductModal";
+import {formatToVnd} from "../../utils/NumberFormat";
+import Swal from "sweetalert2";
 
 export function ProductManagement() {
+  const [productToUpdate, setproductToUpdate] = useState({
+    productId: 0,
+    name: "",
+    costPrice: 0,
+    categoryId: 0,
+    status: "",
+    description: "",
+    imageSrc: "",
+  });
   const accessToken = LocalStorageUtils.getToken();
 
   const HEADER_NAMES = [
@@ -68,18 +82,31 @@ export function ProductManagement() {
   const renderProduct = (products) => {
     return products.map((product) => (
       <tbody>
-        <tr className="hover">
+        <tr
+          className="hover"
+          onClick={(e) =>
+            openUpdateProductModal(e, product, product.categoryName)
+          }>
           <th>
             <a href="#">{product.id}</a>
           </th>
           <td>{product.name}</td>
           <td>{product.description}</td>
-          <td>{product.costPrice}</td>
-          <td>{product.status}</td>
+          <td>{formatToVnd(product.costPrice)}</td>
+          <td
+            className={`font-bold ${
+              product.status === "Available" ? "text-green-500" : "text-red-500"
+            }`}>
+            {product.status}
+          </td>
           <td>{product.categoryName}</td>
-          <td>
-            <button className="btn btn-ghost">
+          <td data-column="action">
+            <button
+              data-column="action"
+              className="btn btn-ghost"
+              onClick={(e) => handleDeleteProduct(e, product.id, product.name)}>
               <svg
+                data-column="action"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -99,6 +126,72 @@ export function ProductManagement() {
     ));
   };
 
+  const handleDeleteProduct = async (e, id, name) => {
+    e.preventDefault();
+
+    Swal.fire({
+      title: "Chắc chưa?",
+      text: `Vật liệu ${name} sẽ bị xoá và không thể tái tạo!!!`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Delete it",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteProduct(id, name);
+      }
+    });
+  };
+
+  const deleteProduct = async (id, name) => {
+    try {
+      const response = await authenticatedApiInstance(accessToken).delete(
+        UPDATE_OR_DELTE_PRODUCT(id),
+      );
+      if (SUCCESS_RESPONSE_STATUS.includes(response.status)) {
+        await new Promise((r) => setTimeout(r, 60));
+        await ToastSuccess(`Sản phẩm ${name} đã được delete`);
+        window.location.reload();
+      }
+    } catch (err) {
+      await ToastError(
+        err.response.data["Error"] || err.response.data["title"],
+      );
+    }
+  };
+
+  const openUpdateProductModal = async (e, product, categoryName) => {
+    e.preventDefault();
+    console.log(e.target)
+    console.log(e.target.getAttribute("data-column"))
+    if (e.target.getAttribute("data-column") !== "action") {
+      try {
+        const response = await authenticatedApiInstance(accessToken).get(
+          GET_CATEGORY_URL(`name=${categoryName}`),
+        );
+        const tempList = response.data.items;
+        if (tempList.length > 0) {
+          const categoryIdByName = response.data.items[0].id;
+          setproductToUpdate({
+            categoryId: categoryIdByName,
+            name: product.name,
+            description: product.description,
+            status: product.status,
+            imageSrc: product.image,
+            costPrice: product.costPrice,
+            productId: product.id,
+          });
+          window.document.getElementById("update_category_modal")?.showModal();
+        } else {
+          throw new Error("Không tìm thấy vật liệu tương ứng");
+        }
+      } catch (err) {
+        await ToastError(err.response?.data["Error"] || err);
+      }
+    }
+  };
+
   return (
     <div class="flex-1 p-4">
       <div class="">
@@ -109,7 +202,9 @@ export function ProductManagement() {
             </h2>
             <button
               class="btn btn-outline "
-              onClick={() => document.getElementById("my_modal_1").showModal()}>
+              onClick={() =>
+                document.getElementById("create_product_modal").showModal()
+              }>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -118,20 +213,16 @@ export function ProductManagement() {
                 <path d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z" />
               </svg>
             </button>
-            <dialog id="my_modal_1" className="modal">
-              <div className="modal-box">
-                <form method="dialog">
-                  {/* if there is a button in form, it will close the modal */}
-                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                    ✕
-                  </button>
-                </form>
-                <h3 className="font-bold text-lg">Hello!</h3>
-                <p className="py-4">
-                  Press ESC key or click on ✕ button to close
-                </p>
-              </div>
-            </dialog>
+            <CreateProductModal />
+            <UpdateProductModal
+              name={productToUpdate.name}
+              description={productToUpdate.description}
+              imageSrc={productToUpdate.imageSrc}
+              status={productToUpdate.status}
+              categoryId={productToUpdate.categoryId}
+              costPrice={productToUpdate.costPrice}
+              productId={productToUpdate.productId}
+            />
           </div>
 
           <div class="my-1"></div>

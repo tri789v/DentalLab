@@ -1,14 +1,34 @@
 import React, {useEffect, useState} from "react";
 import {TableGenerator} from "../../utils/TableGenerator";
 import LocalStorageUtils from "../../utils/LocalStorageUtils";
-import {GET_ALL_ACCOUNT, GET_CATEGORY_URL} from "../../utils/constants";
+import {
+  DELETE_CATEGORY,
+  GET_ALL_ACCOUNT,
+  GET_CATEGORY_URL,
+  SUCCESS_RESPONSE_STATUS,
+  UPDATE_OR_DELTE_CATEGORY,
+} from "../../utils/constants";
 import {authenticatedApiInstance} from "../../utils/ApiInstance";
-import {ToastConfirmDelete, ToastError} from "../../utils/Toastify";
+import {
+  ToastConfirmDelete,
+  ToastError,
+  ToastSuccess,
+} from "../../utils/Toastify";
 import Pagination from "../../components/Pagination";
 import queryString from "query-string";
-import { CreateCategoryModal } from "../../components/Admin/Category/CreateCategoryModal";
+import {CreateCategoryModal} from "../../components/Admin/Category/CreateCategoryModal";
+import Swal from "sweetalert2";
+import {UpdateCategoryModal} from "../../components/Admin/Category/UpdateCategoryModal";
 
 export function CategoryManagement() {
+  const [categoryToUpdate, setcategoryToUpdate] = useState({
+    categoryId: 0,
+    categoryName: "",
+    description: "",
+    status: "",
+    image: "",
+  });
+
   const accessToken = LocalStorageUtils.getToken();
 
   const HEADER_NAMES = ["ID", "Vật liệu", "Mô tả", "Trạng thái", "Thao tác"];
@@ -57,21 +77,34 @@ export function CategoryManagement() {
   const renderCategory = (categories) => {
     return categories.map((category) => (
       <tbody>
-        <tr className="hover">
+        <tr
+          className="hover text-xl"
+          onClick={(e) => openUpdateCategoryModal(e, category)}>
           <th>
             <a href="#">{category.id}</a>
           </th>
           <td>{category.categoryName}</td>
           <td>{category.description}</td>
-          <td>{category.status}</td>
+          <td
+            className={`font-bold ${
+              category.status === "Active" ? "text-green-500" : "text-red-500"
+            }`}>
+            {category.status}
+          </td>
           <td>
-            <button className="btn btn-ghost">
+            <button
+              data-column="action"
+              className="btn btn-ghost"
+              onClick={(e) =>
+                handleDeleteCategory(e, category.id, category.categoryName)
+              }>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
+                data-column="action"
                 className="w-6 h-6">
                 <path
                   strokeLinecap="round"
@@ -86,6 +119,55 @@ export function CategoryManagement() {
     ));
   };
 
+  const handleDeleteCategory = async (e, id, name) => {
+    e.preventDefault();
+
+    Swal.fire({
+      title: "Chắc chưa?",
+      text: `Vật liệu ${name} sẽ bị xoá và không thể tái tạo!!!`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Delete it",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteCategory(id, name);
+      }
+    });
+  };
+
+  const deleteCategory = async (id, name) => {
+    try {
+      const response = await authenticatedApiInstance(accessToken).delete(
+        UPDATE_OR_DELTE_CATEGORY(id),
+      );
+      if (SUCCESS_RESPONSE_STATUS.includes(response.status)) {
+        await new Promise((r) => setTimeout(r, 60));
+        await ToastSuccess(`Vật liệu ${name} đã được delete`);
+        window.location.reload();
+      }
+    } catch (err) {
+      await ToastError(
+        err.response.data["Error"] || err.response.data["title"],
+      );
+    }
+  };
+
+  const openUpdateCategoryModal = (e, category) => {
+    e.preventDefault();
+    if (e.target.getAttribute("data-column") !== "action") {
+      setcategoryToUpdate({
+        categoryId: category.id,
+        categoryName: category.categoryName,
+        description: category.description,
+        status: category.status,
+        image: category.image,
+      });
+      window.document.getElementById("update_category_modal")?.showModal();
+    }
+  };
+
   return (
     <div class="flex-1 p-4">
       <div class="">
@@ -96,7 +178,9 @@ export function CategoryManagement() {
             </h2>
             <button
               class="btn btn-outline "
-              onClick={() => document.getElementById("create_category_modal").showModal()}>
+              onClick={() =>
+                document.getElementById("create_category_modal").showModal()
+              }>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -105,7 +189,14 @@ export function CategoryManagement() {
                 <path d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z" />
               </svg>
             </button>
-            <CreateCategoryModal/> 
+            <CreateCategoryModal />
+            <UpdateCategoryModal
+              categoryId={categoryToUpdate.categoryId}
+              categoryName={categoryToUpdate.categoryName}
+              description={categoryToUpdate.description}
+              status={categoryToUpdate.status}
+              imageSrc={categoryToUpdate.image}
+            />
           </div>
 
           <div class="my-1"></div>
